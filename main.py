@@ -14,11 +14,12 @@ import pygame
 # from .user import User
 # from .dir import Dir
 # from AgentCat import AgentCat
-# from Player import Player
- 
+from Player import Player
+
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GRAY = (128, 128, 128)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
@@ -36,6 +37,12 @@ IMAGE_CAT = pygame.image.load("cat-black-face.png")
 IMAGE_CAT = pygame.transform.scale(IMAGE_CAT, (WIDTH, HEIGHT))
 IMAGE_CAT_RECT = IMAGE_CAT.get_rect()
  
+
+#<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+IMAGE_MOUSE = pygame.image.load("mouse.png")
+IMAGE_MOUSE = pygame.transform.scale(IMAGE_MOUSE, (WIDTH, HEIGHT))
+IMAGE_MOUSE_RECT = IMAGE_MOUSE.get_rect()
+
 # Create a 2 dimensional array. A two dimensional
 # array is simply a list of lists.
 # grid = []
@@ -49,7 +56,7 @@ grid =[
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
+    ['W','W','W','W','W',0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
@@ -59,10 +66,14 @@ grid =[
      
 ]
 
+player = Player((8, 5))
 # Set row 1, cell 5 to one. (Remember rows and
 # column numbers start at zero.)
-grid[1][5] = 1
- 
+# 
+grid[1][7] = 'C'
+grid[player.pos[0]][player.pos[1]] = 'P'
+
+
 # Initialize pygame
 pygame.init()
  
@@ -84,6 +95,20 @@ while not done:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
+        elif event.type == pygame.KEYDOWN :
+            grid[player.pos[0]][player.pos[1]] = 0
+            if event.key == pygame.K_UP:
+                player.move(-1, 0)
+            if event.key == pygame.K_DOWN:
+                player.move(1, 0)
+            if event.key == pygame.K_LEFT:
+                player.move(0, -1)
+            if event.key == pygame.K_RIGHT:
+                player.move(0, 1)
+            grid[player.pos[0]][player.pos[1]] = 'P'
+            
+
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
@@ -91,7 +116,7 @@ while not done:
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
             # Set that location to one
-            grid[row][column] = 1
+            grid[row][column] = 'C'
             print("Click ", pos, "Grid coordinates: ", row, column)
  
     # Set the screen background
@@ -101,15 +126,22 @@ while not done:
     for row in range(10):
         for column in range(10):
             color = WHITE
+            if grid[row][column] == 'W':
+                color = GRAY
             pygame.draw.rect(screen,
                              color,
                              [(MARGIN + WIDTH) * column + MARGIN,
                               (MARGIN + HEIGHT) * row + MARGIN,
                               WIDTH,
                               HEIGHT])
-            if grid[row][column] == 1:
+            if grid[row][column] == 'C':
                 # color = GREEN
                 screen.blit(IMAGE_CAT, [(MARGIN + WIDTH) * column + MARGIN,
+                                        (MARGIN + HEIGHT) * row + MARGIN,
+                                        WIDTH,
+                                        HEIGHT])
+            if grid[row][column] == 'P':
+                screen.blit(IMAGE_MOUSE, [(MARGIN + WIDTH) * column + MARGIN,
                                         (MARGIN + HEIGHT) * row + MARGIN,
                                         WIDTH,
                                         HEIGHT])
