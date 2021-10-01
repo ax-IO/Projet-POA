@@ -14,7 +14,42 @@ import pygame
 # from .user import User
 # from .dir import Dir
 # from AgentCat import AgentCat
-from Player import Player
+# from Player import Player
+
+# turn_count = 0
+# old_turn_count = turn_count
+
+class Player():
+    def __init__(self, pos = (8, 5)):
+        # First we create the image by filling a surface with blue color
+        # img = pygame.Surface( (10, 15) ).convert()
+        # img.fill(BLUE)
+
+        # rec = pygame.transform.scale(IMAGE_CAT, (WIDTH, HEIGHT))
+        self.pos = pos
+    
+    def move (self, x, y):
+        posX = self.pos[0] + x
+        posY = self.pos[1] + y
+
+        if (posX>=0 and posX<len(grid[0]) and posY>=0 and posY<len(grid[0])):
+            if (grid[posX][posY] != 'W') :
+                self.pos = (posX, posY)
+                # global turn_count 
+                # turn_count+= 1
+                # print(turn_count)
+                cat.choix_action()
+                
+
+class Cat():
+    def __init__(self, pos = (1, 7)):
+        self.pos = pos
+        self.direction = 0
+    
+    def choix_action(self):
+        print("test")
+        # global old_turn_count
+        # old_turn_count = turn_count
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -33,7 +68,10 @@ MARGIN = 10
 
 # IMAGE SPRITE
 # <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-IMAGE_CAT = pygame.image.load("cat-black-face.png")
+# IMAGE_CAT = pygame.image.load("cat-black-face.png")
+#<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+IMAGE_CAT = pygame.image.load("cat.png")
+
 IMAGE_CAT = pygame.transform.scale(IMAGE_CAT, (WIDTH, HEIGHT))
 IMAGE_CAT_RECT = IMAGE_CAT.get_rect()
  
@@ -66,11 +104,13 @@ grid =[
      
 ]
 
+
 player = Player((8, 5))
+cat = Cat((1, 7))
 # Set row 1, cell 5 to one. (Remember rows and
 # column numbers start at zero.)
-# 
-grid[1][7] = 'C'
+
+grid[cat.pos[0]][cat.pos[1]] = 'C'
 grid[player.pos[0]][player.pos[1]] = 'P'
 
 
@@ -106,7 +146,7 @@ while not done:
             if event.key == pygame.K_RIGHT:
                 player.move(0, 1)
             grid[player.pos[0]][player.pos[1]] = 'P'
-            
+        
 
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -118,6 +158,11 @@ while not done:
             # Set that location to one
             grid[row][column] = 'C'
             print("Click ", pos, "Grid coordinates: ", row, column)
+        
+        # print(turn_count)
+
+        # if (turn_count>old_turn_count):
+        #     cat.choix_action()
  
     # Set the screen background
     screen.fill(BLACK)
@@ -134,12 +179,17 @@ while not done:
                               (MARGIN + HEIGHT) * row + MARGIN,
                               WIDTH,
                               HEIGHT])
+            
+            # Affichage du sprite cat sur la case
             if grid[row][column] == 'C':
                 # color = GREEN
-                screen.blit(IMAGE_CAT, [(MARGIN + WIDTH) * column + MARGIN,
+                IMAGE_CAT_rotate = pygame.transform.rotate(IMAGE_CAT, cat.direction)
+                screen.blit(IMAGE_CAT_rotate, [(MARGIN + WIDTH) * column + MARGIN,
                                         (MARGIN + HEIGHT) * row + MARGIN,
                                         WIDTH,
                                         HEIGHT])
+            # Affichage du sprite Player sur la case
+
             if grid[row][column] == 'P':
                 screen.blit(IMAGE_MOUSE, [(MARGIN + WIDTH) * column + MARGIN,
                                         (MARGIN + HEIGHT) * row + MARGIN,
