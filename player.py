@@ -5,6 +5,11 @@ class Player(Entity):
         super(Player, self).__init__(grid, pos)
         self.moved = False
     def move (self, x, y):
+        if(self.grid[self.pos[0]][self.pos[1]] == 'T'):
+            self.grid[self.pos[0]][self.pos[1]] = 'V'
+        else:
+            self.grid[self.pos[0]][self.pos[1]] = 0
+
         posX = self.pos[0] + x
         posY = self.pos[1] + y
 
@@ -12,3 +17,7 @@ class Player(Entity):
             if (self.grid[posX][posY] != 'W') :
                 self.pos = (posX, posY)
                 self.moved = True
+        if(self.grid[self.pos[0]][self.pos[1]] == 'V'):
+            self.grid[self.pos[0]][self.pos[1]] = 'T'
+        else:
+            self.grid[self.pos[0]][self.pos[1]] = 'P'

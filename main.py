@@ -24,11 +24,11 @@ RED = (255, 0, 0)
 
 
 # This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 40
-HEIGHT = 40
+WIDTH = 50
+HEIGHT = 50
  
 # This sets the margin between each cell
-MARGIN = 10
+MARGIN = 1
 
 # IMAGE SPRITE
 # <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
@@ -43,7 +43,12 @@ IMAGE_CAT_RECT = IMAGE_CAT.get_rect()
 #<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 IMAGE_MOUSE = pygame.image.load("mouse.png")
 IMAGE_MOUSE = pygame.transform.scale(IMAGE_MOUSE, (WIDTH, HEIGHT))
-IMAGE_MOUSE_RECT = IMAGE_MOUSE.get_rect()
+
+IMAGE_WALL = pygame.image.load("wall.png")
+IMAGE_WALL = pygame.transform.scale(IMAGE_WALL, (WIDTH, HEIGHT))
+
+IMAGE_GRASS = pygame.image.load("grass.png")
+IMAGE_GRASS = pygame.transform.scale(IMAGE_GRASS, (WIDTH, HEIGHT))
 
 grid =[
     [0,0,0,0,0,0,0,0,0,0],
@@ -91,7 +96,6 @@ while not done:
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
         elif event.type == pygame.KEYDOWN :
-            grid[player.pos[0]][player.pos[1]] = 0
             if event.key == pygame.K_UP:
                 player.move(-1, 0)
             if event.key == pygame.K_DOWN:
@@ -107,7 +111,6 @@ while not done:
                 turn_count+= 1
                 print("turn count =", turn_count)
                 cat.choix_action(turn_count)
-            grid[player.pos[0]][player.pos[1]] = 'P'
         
 
 
@@ -128,17 +131,26 @@ while not done:
     for row in range(10):
         for column in range(10):
             color = WHITE
+            
+            screen.blit(IMAGE_GRASS, [(MARGIN + WIDTH) * column + MARGIN,
+                                        (MARGIN + HEIGHT) * row + MARGIN,
+                                        WIDTH,
+                                        HEIGHT])
+            
             if grid[row][column] == 'W':
-                color = GRAY
-            if grid[row][column] == 'V':
-                color = RED
-            pygame.draw.rect(screen,
-                             color,
+                screen.blit(IMAGE_WALL, [(MARGIN + WIDTH) * column + MARGIN,
+                                        (MARGIN + HEIGHT) * row + MARGIN,
+                                        WIDTH,
+                                        HEIGHT])
+            
+            if grid[row][column] == 'V' or grid[row][column] == 'T':
+                pygame.draw.rect(screen,
+                             RED,
                              [(MARGIN + WIDTH) * column + MARGIN,
                               (MARGIN + HEIGHT) * row + MARGIN,
                               WIDTH,
                               HEIGHT])
-            
+
             # Affichage du sprite cat sur la case
             if grid[row][column] == 'C':
                 # color = GREEN
@@ -147,14 +159,13 @@ while not done:
                                         (MARGIN + HEIGHT) * row + MARGIN,
                                         WIDTH,
                                         HEIGHT])
-            # Affichage du sprite Player sur la case
 
-            if grid[row][column] == 'P':
+            # Affichage du sprite Player sur la case
+            if grid[row][column] == 'P' or grid[row][column] == 'T':
                 screen.blit(IMAGE_MOUSE, [(MARGIN + WIDTH) * column + MARGIN,
                                         (MARGIN + HEIGHT) * row + MARGIN,
                                         WIDTH,
                                         HEIGHT])
-                # screen.blit(IMAGE_CAT, [row,column, 20, 20])
 
     # Limit to 60 frames per second
     clock.tick(60)
