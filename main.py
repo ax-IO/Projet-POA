@@ -10,6 +10,7 @@
 """
 import pygame
 
+from menu import Menu
 from catAgent import Cat
 from player import Player
 from levels import Levels
@@ -75,12 +76,14 @@ pygame.display.set_caption("Metal Gear Solid VI : Return of the Cat")
  
 # Loop until the user clicks the close button.
 done = False
+victory = False
+gameover = False
  
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
 # -------- Main Program Loop -----------
-while not done:
+while not (done or victory or gameover):
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
@@ -98,16 +101,19 @@ while not done:
             if player.moved == True:
                 player.moved = False
                 if (grid[player.pos[0]][player.pos[1]] == 'H'):
-                    # Open new level
                     world.currentLevel+=1
-                    grid = world.levels[world.currentLevel]
-                    player = world.player[world.currentLevel]
-                    cats = world.cats[world.currentLevel]
-                    turn_count=0
+                    if(world.currentLevel == len(world.levels)): # Victory break
+                        victory = True
+                    else:
+                        # Open new level
+                        grid = world.levels[world.currentLevel]
+                        player = world.player[world.currentLevel]
+                        cats = world.cats[world.currentLevel]
+                        turn_count=0
 
-                    grid[player.pos[0]][player.pos[1]] = 'P'
-                    for c in cats:
-                        grid[c.pos[0]][c.pos[1]] = 'C'
+                        grid[player.pos[0]][player.pos[1]] = 'P'
+                        for c in cats:
+                            grid[c.pos[0]][c.pos[1]] = 'C'
                 else:
                     turn_count+= 1
                 print("turn count =", turn_count)
@@ -188,7 +194,8 @@ while not done:
  
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
- 
-# Be IDLE friendly. If you forget this line, the program will 'hang'
-# on exit.
-pygame.quit()
+if(victory):
+    victoryMenu = Menu(screen, 0)
+    victoryMenu.launch()
+elif(done):
+    pygame.quit()
