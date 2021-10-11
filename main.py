@@ -33,19 +33,19 @@ HEIGHT = 50
 MARGIN = 1
 
 # IMAGE SPRITE
-IMAGE_CAT = pygame.image.load("cat.png")
+IMAGE_CAT = pygame.image.load("img/cat.png")
 IMAGE_CAT = pygame.transform.scale(IMAGE_CAT, (WIDTH, HEIGHT))
  
-IMAGE_MOUSE = pygame.image.load("mouse.png")
+IMAGE_MOUSE = pygame.image.load("img/mouse.png")
 IMAGE_MOUSE = pygame.transform.scale(IMAGE_MOUSE, (WIDTH, HEIGHT))
 
-IMAGE_WALL = pygame.image.load("wall.png")
+IMAGE_WALL = pygame.image.load("img/wall.png")
 IMAGE_WALL = pygame.transform.scale(IMAGE_WALL, (WIDTH, HEIGHT))
 
-IMAGE_GRASS = pygame.image.load("grass.png")
+IMAGE_GRASS = pygame.image.load("img/grass.png")
 IMAGE_GRASS = pygame.transform.scale(IMAGE_GRASS, (WIDTH, HEIGHT))
 
-IMAGE_HOLE = pygame.image.load("hole.png")
+IMAGE_HOLE = pygame.image.load("img/hole.png")
 IMAGE_HOLE = pygame.transform.scale(IMAGE_HOLE, (WIDTH, HEIGHT))
 
 world = Levels()

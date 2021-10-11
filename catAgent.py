@@ -13,7 +13,7 @@ class Cat(Entity):
         self.vision = [[0] * len(self.grid[0]) for i in range((len(self.grid)))] # Init 2D Array to 0
 
     def souffle(self):
-        effect = pygame.mixer.Sound('chatpascontent.wav')
+        effect = pygame.mixer.Sound('sound/chatpascontent.wav')
         effect.play()
 
     def choix_action(self, turn_count):
