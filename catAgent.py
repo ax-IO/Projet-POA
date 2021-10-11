@@ -1,10 +1,19 @@
+
+import pygame
+
 from entity import Entity
+
+
 
 class Cat(Entity):
     def __init__(self, grid, pos = (2, 7)):
         super(Cat, self).__init__(grid, pos)
         self.direction = 0
         self.portee_vision = 2
+
+    def souffle(self):
+        effect = pygame.mixer.Sound('chatpascontent.wav')
+        effect.play()
 
     def choix_action(self, turn_count):
         print("test")

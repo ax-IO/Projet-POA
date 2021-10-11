@@ -118,8 +118,8 @@ while not done:
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
             # Set that location to one
-            grid[row][column] = 'C'
-            print("Click ", pos, "Grid coordinates: ", row, column)
+            if(grid[row][column] == 'C'):
+                cat.souffle()
  
     # Set the screen background
     screen.fill(BLACK)
