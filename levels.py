@@ -37,3 +37,6 @@ class Levels():
         self.levels = [level1, level2]
         self.player = [level1Player,level2Player]
         self.cats = [level1Cats,level2Cats]
+
+    def Reset(self):
+        self.currentLevel = 0

@@ -61,8 +61,8 @@ class Menu():
                 elif(self.type==1) and event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = event.pos  # gets mouse position
                     if self.quitButton.collidepoint(mouse_pos):
-                        gameExit = True
+                        pygame.quit()
                     elif self.continueButton.collidepoint(mouse_pos):
                         gameExit = True
-        pygame.quit()
+        
         

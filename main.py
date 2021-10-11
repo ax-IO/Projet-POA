@@ -11,8 +11,6 @@
 import pygame
 
 from menu import Menu
-from catAgent import Cat
-from player import Player
 from levels import Levels
 
 turn_count = 0
@@ -83,10 +81,26 @@ gameover = False
 clock = pygame.time.Clock()
 
 # -------- Main Program Loop -----------
-while not (done or victory or gameover):
+while not (done or victory):
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
+        elif(gameover == True):
+            gameoverMenu = Menu(screen, 1)
+            gameoverMenu.launch()
+
+            # Continue
+            world.Reset()
+            gameover = False
+
+            grid = world.levels[world.currentLevel]
+            player.pos = world.player[world.currentLevel].initpos
+            cats = world.cats[world.currentLevel]
+
+            grid[player.pos[0]][player.pos[1]] = 'P'
+            for c in cats:
+                grid[c.pos[0]][c.pos[1]] = 'C'
+            screen = pygame.display.set_mode(WINDOW_SIZE)
         elif event.type == pygame.KEYDOWN :
             if event.key == pygame.K_UP:
                 player.move(-1, 0)
@@ -201,8 +215,5 @@ while not (done or victory or gameover):
 if(victory):
     victoryMenu = Menu(screen, 0)
     victoryMenu.launch()
-elif(gameover):
-    gameoverMenu = Menu(screen, 1)
-    gameoverMenu.launch()
 elif(done):
     pygame.quit()

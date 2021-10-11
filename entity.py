@@ -1,7 +1,7 @@
 class Entity():
     def __init__(self, grid, pos = (2, 7)):
         self.grid = grid
-        self.pos = pos
+        self.initpos = self.pos = pos
         self.moved = False
     def move(self, x, y):
         posX = self.pos[0] + x
