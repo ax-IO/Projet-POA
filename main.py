@@ -95,11 +95,13 @@ while not (done or victory):
 
             grid = world.levels[world.currentLevel]
             player.pos = world.player[world.currentLevel].initpos
+            player.grid = grid
             cats = world.cats[world.currentLevel]
 
             grid[player.pos[0]][player.pos[1]] = 'P'
             for c in cats:
                 grid[c.pos[0]][c.pos[1]] = 'C'
+                c.grid = grid
             screen = pygame.display.set_mode(WINDOW_SIZE)
         elif event.type == pygame.KEYDOWN :
             if event.key == pygame.K_UP:
