@@ -19,5 +19,5 @@ class Player(Entity):
                 self.moved = True
         if(self.grid[self.pos[0]][self.pos[1]] == 'V'):
             self.grid[self.pos[0]][self.pos[1]] = 'T'
-        else:
+        elif(self.grid[self.pos[0]][self.pos[1]] != 'H'):
             self.grid[self.pos[0]][self.pos[1]] = 'P'

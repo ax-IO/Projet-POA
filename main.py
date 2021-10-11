@@ -12,8 +12,10 @@ import pygame
 
 from catAgent import Cat
 from player import Player
+from levels import Levels
 
 turn_count = 0
+currentLevel = 0
                
 # Define some colors
 BLACK = (0, 0, 0)
@@ -31,16 +33,9 @@ HEIGHT = 50
 MARGIN = 1
 
 # IMAGE SPRITE
-# <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-# IMAGE_CAT = pygame.image.load("cat-black-face.png")
-#<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 IMAGE_CAT = pygame.image.load("cat.png")
-
 IMAGE_CAT = pygame.transform.scale(IMAGE_CAT, (WIDTH, HEIGHT))
-IMAGE_CAT_RECT = IMAGE_CAT.get_rect()
  
-
-#<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 IMAGE_MOUSE = pygame.image.load("mouse.png")
 IMAGE_MOUSE = pygame.transform.scale(IMAGE_MOUSE, (WIDTH, HEIGHT))
 
@@ -50,29 +45,23 @@ IMAGE_WALL = pygame.transform.scale(IMAGE_WALL, (WIDTH, HEIGHT))
 IMAGE_GRASS = pygame.image.load("grass.png")
 IMAGE_GRASS = pygame.transform.scale(IMAGE_GRASS, (WIDTH, HEIGHT))
 
-grid =[
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    ['W','W','W','W','W',0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-     
-]
+IMAGE_HOLE = pygame.image.load("hole.png")
+IMAGE_HOLE = pygame.transform.scale(IMAGE_HOLE, (WIDTH, HEIGHT))
 
+world = Levels()
 
-player = Player(grid, (8, 5))
-cat = Cat(grid, (2,7))
-# Set row 1, cell 5 to one. (Remember rows and
-# column numbers start at zero.)
+grid = world.levels[world.currentLevel]
+player = world.player[world.currentLevel]
+cats = world.cats[world.currentLevel]
 
-grid[cat.pos[0]][cat.pos[1]] = 'C'
 grid[player.pos[0]][player.pos[1]] = 'P'
+for c in cats:
+    grid[c.pos[0]][c.pos[1]] = 'C'
 
+def getCatByPos(x,y):
+    for c in cats:
+        if(c.pos == (x,y)):
+            return c
 
 # Initialize pygame
 pygame.init()
@@ -89,7 +78,7 @@ done = False
  
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
- 
+
 # -------- Main Program Loop -----------
 while not done:
     for event in pygame.event.get():  # User did something
@@ -108,9 +97,22 @@ while not done:
                 player.move(0,0)
             if player.moved == True:
                 player.moved = False
-                turn_count+= 1
+                if (grid[player.pos[0]][player.pos[1]] == 'H'):
+                    # Open new level
+                    world.currentLevel+=1
+                    grid = world.levels[world.currentLevel]
+                    player = world.player[world.currentLevel]
+                    cats = world.cats[world.currentLevel]
+                    turn_count=0
+
+                    grid[player.pos[0]][player.pos[1]] = 'P'
+                    for c in cats:
+                        grid[c.pos[0]][c.pos[1]] = 'C'
+                else:
+                    turn_count+= 1
                 print("turn count =", turn_count)
-                cat.choix_action(turn_count)
+                for c in cats:
+                    c.choix_action(turn_count)
         
 
 
@@ -122,38 +124,52 @@ while not done:
             row = pos[1] // (HEIGHT + MARGIN)
             # Set that location to one
             if(grid[row][column] == 'C'):
-                cat.souffle()
+                cats[0].souffle()
  
     # Set the screen background
     screen.fill(BLACK)
  
     # Draw the grid
+
+    ## Draw grass
     for row in range(10):
         for column in range(10):
-            color = WHITE
-            
+            # Affichage du sprite grass sur la case
             screen.blit(IMAGE_GRASS, [(MARGIN + WIDTH) * column + MARGIN,
-                                        (MARGIN + HEIGHT) * row + MARGIN,
-                                        WIDTH,
-                                        HEIGHT])
+                                (MARGIN + HEIGHT) * row + MARGIN,
+                                WIDTH,
+                                HEIGHT])
+    for row in range(10):
+        for column in range(10):
+            tile = grid[row][column]
             
-            if grid[row][column] == 'W':
+            ## Draw dangerous areas and grass
+            for c in cats:                
+                # Affichage d'une case rouge en cas de vision du chat
+                if c.vision[row][column] == 'V':
+                    pygame.draw.rect(screen,
+                                RED,
+                                [(MARGIN + WIDTH) * column + MARGIN,
+                                (MARGIN + HEIGHT) * row + MARGIN,
+                                WIDTH,
+                                HEIGHT])
+
+            ## Draw the rest
+            # Affichage du sprite wall sur la case
+            if tile == 'W':
                 screen.blit(IMAGE_WALL, [(MARGIN + WIDTH) * column + MARGIN,
                                         (MARGIN + HEIGHT) * row + MARGIN,
                                         WIDTH,
                                         HEIGHT])
-            
-            if grid[row][column] == 'V' or grid[row][column] == 'T':
-                pygame.draw.rect(screen,
-                             RED,
-                             [(MARGIN + WIDTH) * column + MARGIN,
-                              (MARGIN + HEIGHT) * row + MARGIN,
-                              WIDTH,
-                              HEIGHT])
+            elif tile == 'H':
+                screen.blit(IMAGE_HOLE, [(MARGIN + WIDTH) * column + MARGIN,
+                                        (MARGIN + HEIGHT) * row + MARGIN,
+                                        WIDTH,
+                                        HEIGHT])
 
             # Affichage du sprite cat sur la case
-            if grid[row][column] == 'C':
-                # color = GREEN
+            if tile == 'C':
+                cat = getCatByPos(row, column)
                 IMAGE_CAT_rotate = pygame.transform.rotate(IMAGE_CAT, cat.direction)
                 screen.blit(IMAGE_CAT_rotate, [(MARGIN + WIDTH) * column + MARGIN,
                                         (MARGIN + HEIGHT) * row + MARGIN,
@@ -161,7 +177,7 @@ while not done:
                                         HEIGHT])
 
             # Affichage du sprite Player sur la case
-            if grid[row][column] == 'P' or grid[row][column] == 'T':
+            if tile == 'P':
                 screen.blit(IMAGE_MOUSE, [(MARGIN + WIDTH) * column + MARGIN,
                                         (MARGIN + HEIGHT) * row + MARGIN,
                                         WIDTH,
