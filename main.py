@@ -34,7 +34,7 @@ HEIGHT = 50
 MARGIN = 1
 
 # IMAGE SPRITE
-IMAGE_CAT = pygame.image.load("img/cat.png")
+IMAGE_CAT = pygame.image.load("img/cat2.png")
 IMAGE_CAT = pygame.transform.scale(IMAGE_CAT, (WIDTH, HEIGHT))
  
 IMAGE_MOUSE = pygame.image.load("img/mouse.png")
