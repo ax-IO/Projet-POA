@@ -5,7 +5,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (128, 128, 128)
 GREEN = (0, 255, 0)
-RED = (255, 0, 0)
+RED = (76, 0, 19)
 
 class Menu():
     def __init__(self, screen, type):
@@ -33,6 +33,16 @@ class Menu():
             h = 300
             self.s = [w, h]
             self.screen = pygame.display.set_mode(self.s)
+            self.screen.fill(BLACK)
+            self.message_display("GAME OVER", 50, w/2 -160, 50, RED)
+            self.message_display("Vous vous êtes fait mangée!", 30, w/2 -220, 100, RED)
+            self.message_display("Voulez-vous réessayer ?", 38, w/2 -220, h -80, WHITE)
+            self.continueButton = pygame.Rect(w/2 - 101, h -35, 82, 30)
+            self.quitButton = pygame.Rect(w/2 + 20, h -35, 80, 30)
+            pygame.draw.rect(screen, [255, 0, 0], self.continueButton)
+            self.message_display("Continuer", 16, w/2 - 101, h -28, BLACK)
+            pygame.draw.rect(screen, [255, 0, 0], self.quitButton)
+            self.message_display("Quitter", 16, w/2 + 30, h -28, BLACK)
         pygame.display.flip()
         
         
@@ -46,7 +56,13 @@ class Menu():
         gameExit = False
         while not gameExit:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
+                if (self.type==0) and event.type == pygame.KEYDOWN:
                     gameExit = True
+                elif(self.type==1) and event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos  # gets mouse position
+                    if self.quitButton.collidepoint(mouse_pos):
+                        gameExit = True
+                    elif self.continueButton.collidepoint(mouse_pos):
+                        gameExit = True
         pygame.quit()
         

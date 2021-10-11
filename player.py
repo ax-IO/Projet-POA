@@ -7,5 +7,6 @@ class Player(Entity):
     def move (self, x, y):
         super(Player, self).move(x,y)
 
-        if(self.moved and self.grid[self.pos[0]][self.pos[1]] != 'H'):
+        if(self.moved and self.grid[self.pos[0]][self.pos[1]] != 'H'
+                      and self.grid[self.pos[0]][self.pos[1]] != 'C'):
             self.grid[self.pos[0]][self.pos[1]] = 'P'

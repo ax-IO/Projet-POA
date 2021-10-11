@@ -114,11 +114,15 @@ while not (done or victory or gameover):
                         grid[player.pos[0]][player.pos[1]] = 'P'
                         for c in cats:
                             grid[c.pos[0]][c.pos[1]] = 'C'
+                elif(grid[player.pos[0]][player.pos[1]] == 'C'):
+                    gameover = True
                 else:
                     turn_count+= 1
                 print("turn count =", turn_count)
                 for c in cats:
                     c.choix_action(turn_count)
+                    if(c.pos == player.pos):
+                        gameover = True
         
 
 
@@ -197,5 +201,8 @@ while not (done or victory or gameover):
 if(victory):
     victoryMenu = Menu(screen, 0)
     victoryMenu.launch()
+elif(gameover):
+    gameoverMenu = Menu(screen, 1)
+    gameoverMenu.launch()
 elif(done):
     pygame.quit()
