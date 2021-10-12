@@ -12,35 +12,50 @@ class Cat(Entity):
         self.portee_vision = 2
         self.vision = [[0] * len(self.grid[0])
                        for i in range((len(self.grid)))]  # Init 2D Array to 0
-
+        self.state = 0 # Patrolling
     def souffle(self):
         effect = pygame.mixer.Sound('sound/chatpascontent.wav')
         effect.play()
 
-    def choix_action(self, turn_count):
+    def patrol(self, turn_count):
+        # Rotate to new direction
+        if (turn_count % 2 == 0):
+            dir = random.randint(0, 3)*90
+            if(self.pos[1] == len(self.grid)-1): # If cat on right side, go left
+                dir = 180
+            elif(self.pos[1] == 0): # If cat on left side, go right
+                dir = 0
+            if(self.pos[0] == len(self.grid[0])-1): # If cat on bottom side, go up
+                dir = 90
+            if(self.pos[0] == 0): # If cat on top side, go down
+                dir = 270
+            self.rotate(dir)
+        # Move
         if (turn_count % 2 == 1):
             self.move()
-        if (turn_count % 2 == 0):
-            self.rotate(random.randint(0, 3)*90)
+
+
+    def choix_action(self, turn_count):
+        if(self.state==0): # Patrolling
+            self.patrol(turn_count)
 
     def move(self):
-        if (self.direction == 0):
+        if (self.direction == 0): # Right
             x, y = 0, 1
-        if (self.direction == 90):
+        if (self.direction == 90): # Up
             x, y = -1,  0
-        if (self.direction == 180):
-            x, y = 0, 1
-        if (self.direction == 270):
+        if (self.direction == 180): # Left
+            x, y = 0, -1
+        if (self.direction == 270): # Down
             x, y = 1, 0
-        if (self.pos[0]+x >= 0 and self.pos[0]+x < len(self.grid[0]) and self.pos[1]+y >= 0 and self.pos[1]+y < len(self.grid[0])):
-            if (self.grid[self.pos[0] + x][self.pos[1] + y] != 'W'):
-                # print(grid[self.pos[0]][self.pos[1]])
-                self.grid[self.pos[0]][self.pos[1]] = 0
-                self.grid[self.pos[0]+x][self.pos[1]+y] = 'C'
-                self.pos = (self.pos[0] + x, self.pos[1] + y)
+        super(Cat, self).move(x, y)
+        if(self.moved):
+            self.grid[self.pos[0]][self.pos[1]] = 'C'
+            self.update_cone_vision()
+            self.moved = False
 
     def rotate(self, angle):
-        self.direction += angle
+        self.direction = angle
         if (self.direction >= 360):
             self.direction = self.direction % 360
         self.update_cone_vision()
