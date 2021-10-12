@@ -23,13 +23,15 @@ GRAY = (128, 128, 128)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+# Echelle de fenêtre
+screen_scale=2
 
 # This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 50
-HEIGHT = 50
+WIDTH = screen_scale*50
+HEIGHT = screen_scale*50
  
 # This sets the margin between each cell
-MARGIN = 1
+MARGIN = screen_scale*1
 
 # IMAGE SPRITE
 IMAGE_CAT = pygame.image.load("img/cat2.png")
@@ -66,7 +68,7 @@ def getCatByPos(x,y):
 pygame.init()
  
 # Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [510, 510]
+WINDOW_SIZE = [screen_scale*510, screen_scale*510]
 screen = pygame.display.set_mode(WINDOW_SIZE)
  
 # Set title of screen
