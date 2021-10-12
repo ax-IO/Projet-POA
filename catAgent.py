@@ -18,8 +18,26 @@ class Cat(Entity):
         effect.play()
 
     def choix_action(self, turn_count):
+        if (turn_count % 2 == 1):
+            self.move()
         if (turn_count % 2 == 0):
             self.rotate(random.randint(0, 3)*90)
+
+    def move(self):
+        if (self.direction == 0):
+            x, y = 0, 1
+        if (self.direction == 90):
+            x, y = -1,  0
+        if (self.direction == 180):
+            x, y = 0, 1
+        if (self.direction == 270):
+            x, y = 1, 0
+        if (self.pos[0]+x >= 0 and self.pos[0]+x < len(self.grid[0]) and self.pos[1]+y >= 0 and self.pos[1]+y < len(self.grid[0])):
+            if (self.grid[self.pos[0] + x][self.pos[1] + y] != 'W'):
+                # print(grid[self.pos[0]][self.pos[1]])
+                self.grid[self.pos[0]][self.pos[1]] = 0
+                self.grid[self.pos[0]+x][self.pos[1]+y] = 'C'
+                self.pos = (self.pos[0] + x, self.pos[1] + y)
 
     def rotate(self, angle):
         self.direction += angle
