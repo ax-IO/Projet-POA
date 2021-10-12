@@ -1,5 +1,6 @@
 
 import pygame
+import random
 
 from entity import Entity
 
@@ -18,12 +19,12 @@ class Cat(Entity):
 
     def choix_action(self, turn_count):
         if (turn_count % 2 == 0):
-            self.rotate(90)
+            self.rotate(random.randint(0, 3)*90)
 
     def rotate(self, angle):
         self.direction += angle
-        if (self.direction == 360):
-            self.direction =0
+        if (self.direction >= 360):
+            self.direction = self.direction % 360
         self.update_cone_vision()
 
     def update_cone_vision(self):
