@@ -8,7 +8,7 @@ from entity import Entity
 
 
 class Cat(Entity):
-    def __init__(self, grid, pos=(2, 7)):
+    def __init__(self, grid, player, pos=(2, 7)):
         super(Cat, self).__init__(grid, pos)
         self.direction = 0
         self.portee_vision = 2
@@ -68,7 +68,7 @@ class Cat(Entity):
 
     def build_cone_vision(self, minDist, maxDist):
         Vx = Vy = 0
-        
+        self.state = 0
         for d in range(minDist, maxDist):
             # Determine width according to vision distance
             if (self.direction == 0 or self.direction == 270):
@@ -85,12 +85,16 @@ class Cat(Entity):
                     Vx = self.pos[0] + w
                     Vy = self.pos[1] + d
                     self.vision[Vx][Vy] = 'V'
+                    if(self.state==0 and self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
+                        self.state = 1 # Chase him
 
                 elif ((self.direction == 90 or self.direction == 270) 
                 and self.pos[0]+d >= 0 and self.pos[0]+d < len(self.grid[0]) and self.pos[1]+w >= 0 and self.pos[1] + w < len(self.grid[0])):
                     Vx = self.pos[0] + d
                     Vy = self.pos[1] + w
                     self.vision[Vx][Vy] = 'V'
+                    if(self.state==0 and self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
+                        self.state = 1 # Chase him
         
     def update_cone_vision(self):
         # Nettoie cases entourant le chat
@@ -112,4 +116,4 @@ class Cat(Entity):
         elif (self.direction == 270):
             self.build_cone_vision(1, self.portee_vision+1)
         
-        
+
