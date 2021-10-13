@@ -111,5 +111,5 @@ class Cat(Entity):
             
         elif (self.direction == 270):
             self.build_cone_vision(1, self.portee_vision+1)
-                        
-    # [-dist+1 ; dist]
+        
+        
