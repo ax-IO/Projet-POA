@@ -18,7 +18,7 @@ class Levels():
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
         level1Player = Player(level1, (8, 5))
-        level1Cats = [Cat(level1, (2, 7)), ]
+        level1Cats = [Cat(level1, level1Player, (2, 3)), ]
 
         level2 = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -33,8 +33,9 @@ class Levels():
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
         level2Player = Player(level2, (0, 0))
-        level2Cats = [Cat(level2, (7, 7)), Cat(
-            level2, (7, 5)), Cat(level2, (8, 6))]
+        level2Cats = [Cat(level2, level1Player, (7, 7)), Cat(level2, level1Player, (7, 5)), 
+        Cat(level2, level1Player, (8, 6)), Cat(level2, level1Player, (5, 1)), Cat(level2, level1Player, (6, 6)), 
+        Cat(level2, level1Player, (8, 3)), Cat(level2, level1Player, (5, 6)), Cat(level2, level1Player, (7, 6)),]
 
         self.levels = [level1, level2]
         self.player = [level1Player, level2Player]

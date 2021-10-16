@@ -8,7 +8,7 @@ from entity import Entity
 
 
 class Cat(Entity):
-    def __init__(self, grid, player, pos=(2, 7)):
+    def __init__(self, grid, player, pos):
         super(Cat, self).__init__(grid, pos)
         self.direction = 0
         self.portee_vision = 2
@@ -66,15 +66,27 @@ class Cat(Entity):
             self.direction = self.direction % 360
         self.update_cone_vision()
 
-    def build_cone_vision(self, minDist, maxDist):
+
+    def clear_vision_cases(self):
+        # Nettoie cases entourant le chat
+        for j in range(-self.portee_vision, self.portee_vision+1):
+            for i in range(-self.portee_vision, self.portee_vision+1):
+                if (self.pos[0]+j >= 0 and self.pos[0]+j < len(self.grid[0]) and self.pos[1]+i >= 0 and self.pos[1]+i < len(self.grid[0])):
+                    if (self.vision[self.pos[0]+j][self.pos[1]+i] == 'V'):
+                        self.vision[self.pos[0]+j][self.pos[1]+i] = 0
+
+    def build_cone_vision(self, dist):
         Vx = Vy = 0
         self.state = 0
-        for d in range(minDist, maxDist):
+        hidden = False # Si on croise un mur, sortir de la boucle
+        for d in dist:
             # Determine width according to vision distance
             if (self.direction == 0 or self.direction == 270):
+                if(hidden): break
                 minWidth = -d + 1
                 maxWidth = d
             elif (self.direction == 90 or self.direction == 180):
+                if(hidden): break
                 minWidth = d + 1
                 maxWidth = -d
 
@@ -84,6 +96,9 @@ class Cat(Entity):
                 and self.pos[0]+w >= 0 and self.pos[0]+w < len(self.grid[0]) and self.pos[1]+d >= 0 and self.pos[1] + d < len(self.grid[0])):
                     Vx = self.pos[0] + w
                     Vy = self.pos[1] + d
+                    if(self.grid[Vx][Vy] == 'W'):
+                        hidden = True
+                        continue
                     self.vision[Vx][Vy] = 'V'
                     if(self.state==0 and self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
                         self.state = 1 # Chase him
@@ -92,28 +107,26 @@ class Cat(Entity):
                 and self.pos[0]+d >= 0 and self.pos[0]+d < len(self.grid[0]) and self.pos[1]+w >= 0 and self.pos[1] + w < len(self.grid[0])):
                     Vx = self.pos[0] + d
                     Vy = self.pos[1] + w
+                    if(self.grid[Vx][Vy] == 'W'):
+                        hidden = True
+                        continue
                     self.vision[Vx][Vy] = 'V'
                     if(self.state==0 and self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
                         self.state = 1 # Chase him
-        
+
     def update_cone_vision(self):
-        # Nettoie cases entourant le chat
-        for j in range(-self.portee_vision, self.portee_vision+1):
-            for i in range(-self.portee_vision, self.portee_vision+1):
-                if (self.pos[0]+j >= 0 and self.pos[0]+j < len(self.grid[0]) and self.pos[1]+i >= 0 and self.pos[1]+i < len(self.grid[0])):
-                    if (self.vision[self.pos[0]+j][self.pos[1]+i] == 'V'):
-                        self.vision[self.pos[0]+j][self.pos[1]+i] = 0
+        self.clear_vision_cases()
 
         if (self.direction == 0):
-            self.build_cone_vision(1, self.portee_vision+1)
+            self.build_cone_vision(range(1, self.portee_vision+1))
 
         elif (self.direction == 90):
-            self.build_cone_vision(-self.portee_vision, 0)
+            self.build_cone_vision(range(-1, -(self.portee_vision+1), -1))
 
         elif (self.direction == 180):
-            self.build_cone_vision(-self.portee_vision, 0)
+            self.build_cone_vision(range(-1, -(self.portee_vision+1), -1))
             
         elif (self.direction == 270):
-            self.build_cone_vision(1, self.portee_vision+1)
+            self.build_cone_vision(range(1, self.portee_vision+1))
         
 
