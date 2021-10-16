@@ -54,9 +54,15 @@ class Cat(Entity):
             x, y = 0, -1
         if (self.direction == 270): # Down
             x, y = 1, 0
+        trou = self.pos if (self.grid[self.pos[0]][self.pos[1]] in ('O', 'H')) else False
         super(Cat, self).move(x, y)
         if(self.moved):
-            self.grid[self.pos[0]][self.pos[1]] = 'C'
+            if trou is not False:
+                self.grid[trou[0]][trou[1]] = 'H'
+            if self.grid[self.pos[0]][self.pos[1]] == 'H' :
+                self.grid[self.pos[0]][self.pos[1]] = 'O'
+            else:
+                self.grid[self.pos[0]][self.pos[1]] = 'C'
             self.update_cone_vision()
             self.moved = False
 
