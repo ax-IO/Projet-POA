@@ -203,7 +203,8 @@ while not (done or victory):
                 screen.blit(IMAGE_CAT_rotate, [(MARGIN + WIDTH) * column + MARGIN,
                                                (MARGIN + HEIGHT) * row + MARGIN,
                                                WIDTH,
-                                               HEIGHT])
+                                               HEIGHT]
+                                               )
 
             # Affichage du sprite Player sur la case
             if tile == 'P':
