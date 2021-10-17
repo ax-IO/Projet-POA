@@ -14,7 +14,7 @@ pip install pygame
 
 # A faire
 
-Régler cône vision
+Régler cône vision (DONE)
 
 Les chats effacent le trou en marchant dessus
 

@@ -57,7 +57,7 @@ cats = world.cats[world.currentLevel]
 
 grid[player.pos[0]][player.pos[1]] = 'P'
 for c in cats:
-    grid[c.pos[0]][c.pos[1]] = 'C'
+    grid[c.pos[0]][c.pos[1]] = 'C' if (grid[c.pos[0]][c.pos[1]] not in ('H','O')) else 'O'
 
 
 def getCatByPos(x, y):
@@ -104,7 +104,7 @@ while not (done or victory):
 
             grid[player.pos[0]][player.pos[1]] = 'P'
             for c in cats:
-                grid[c.pos[0]][c.pos[1]] = 'C'
+                grid[c.pos[0]][c.pos[1]] = 'C' if (grid[c.pos[0]][c.pos[1]] not in ('H','O')) else 'O'
                 c.grid = grid
             screen = pygame.display.set_mode(WINDOW_SIZE)
         elif event.type == pygame.KEYDOWN:
@@ -133,7 +133,7 @@ while not (done or victory):
 
                         grid[player.pos[0]][player.pos[1]] = 'P'
                         for c in cats:
-                            grid[c.pos[0]][c.pos[1]] = 'C'
+                            grid[c.pos[0]][c.pos[1]] = 'C' if (grid[c.pos[0]][c.pos[1]] not in ('H','O')) else 'O'
                 elif(grid[player.pos[0]][player.pos[1]] == 'C'):
                     gameover = True
                 else:
@@ -197,6 +197,20 @@ while not (done or victory):
 
             # Affichage du sprite cat sur la case
             if tile == 'C':
+                cat = getCatByPos(row, column)
+                IMAGE_CAT_rotate = pygame.transform.rotate(
+                    IMAGE_CAT, cat.direction)
+                screen.blit(IMAGE_CAT_rotate, [(MARGIN + WIDTH) * column + MARGIN,
+                                               (MARGIN + HEIGHT) * row + MARGIN,
+                                               WIDTH,
+                                               HEIGHT])
+                                               
+            # Affichage du sprite cat sur le trou
+            if tile == 'O':
+                screen.blit(IMAGE_HOLE, [(MARGIN + WIDTH) * column + MARGIN,
+                                         (MARGIN + HEIGHT) * row + MARGIN,
+                                         WIDTH,
+                                         HEIGHT])
                 cat = getCatByPos(row, column)
                 IMAGE_CAT_rotate = pygame.transform.rotate(
                     IMAGE_CAT, cat.direction)
