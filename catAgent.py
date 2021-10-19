@@ -10,6 +10,7 @@ from entity import Entity
 class Cat(Entity):
     def __init__(self, grid, player, pos):
         super(Cat, self).__init__(grid, pos)
+        self.player = player
         self.direction = 0
         self.portee_vision = 2
         self.vision = [[0] * len(self.grid[0])
@@ -36,14 +37,35 @@ class Cat(Entity):
         if (turn_count % 2 == 1):
             self.move()
 
-    def chase(self):
-        print("not implemented yet")
+    # bird's eye distance heuristic
+    def h(self, x, y): 
+        return abs(x - self.player.pos[0]) + abs(y - self.player.pos[1])
+
+    # greedy algorithm
+    def greedy(self):
+        x = self.pos[0]
+        y = self.pos[1]
+        min = self.h(x,y)
+        
+        if(self.canMove(x+1, y) and  min > self.h(x+1, y)): direction = 270
+        elif(self.canMove(x-1, y) and  min > self.h(x-1, y)): direction = 90
+        elif(self.canMove(x,y+1) and  min > self.h(x, y+1)): direction = 0
+        elif(self.canMove(x,y-1) and  min > self.h(x, y-1)): direction = 180
+        
+        return direction
+
+    def chase(self, turn_count):
+        # Get the best direction to go to the player
+        self.rotate(self.greedy())
+        # Move
+        if (turn_count % 2 == 1):
+            self.move()
 
     def choix_action(self, turn_count):
         if(self.state==0): # Patrolling
             self.patrol(turn_count)
         elif(self.state==1): # Chasing player
-            self.chase()
+            self.chase(turn_count)
 
     def move(self):
         if (self.direction == 0): # Right
