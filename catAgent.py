@@ -7,7 +7,10 @@ from pygame.constants import VIDEOEXPOSE
 from entity import Entity
 
 
+
 class Cat(Entity):
+
+    last_seen=False
     def __init__(self, grid, player, pos):
         super(Cat, self).__init__(grid, pos)
         self.player = player
@@ -39,7 +42,7 @@ class Cat(Entity):
 
     # bird's eye distance heuristic
     def h(self, x, y): 
-        return abs(x - self.player.pos[0]) + abs(y - self.player.pos[1])
+        return abs(x - Cat.last_seen[0]) + abs(y - Cat.last_seen[1])
 
     # greedy algorithm
     def greedy(self):
@@ -58,8 +61,8 @@ class Cat(Entity):
         # Get the best direction to go to the player
         self.rotate(self.greedy())
         # Move
-        if (turn_count % 2 == 1):
-            self.move()
+        #if (turn_count % 2 == 1):
+        self.move() 
 
     def choix_action(self, turn_count):
         if(self.state==0): # Patrolling
@@ -68,6 +71,7 @@ class Cat(Entity):
             self.chase(turn_count)
 
     def move(self):
+        print("last seen by cat" + str(Cat.last_seen) + " etat:" + str(self.state))
         if (self.direction == 0): # Right
             x, y = 0, 1
         if (self.direction == 90): # Up
@@ -79,6 +83,10 @@ class Cat(Entity):
         trou = self.pos if (self.grid[self.pos[0]][self.pos[1]] in ('O', 'H')) else False
         super(Cat, self).move(x, y)
         if(self.moved):
+            if self.pos==Cat.last_seen :
+                Cat.last_seen=False
+                self.state = 0
+                print(Cat.last_seen)
             if trou is not False:
                 self.grid[trou[0]][trou[1]] = 'H'
             if self.grid[self.pos[0]][self.pos[1]] == 'H' :
@@ -87,6 +95,8 @@ class Cat(Entity):
                 self.grid[self.pos[0]][self.pos[1]] = 'C'
             self.update_cone_vision()
             self.moved = False
+            
+
 
     def rotate(self, angle):
         self.direction = angle
@@ -105,16 +115,20 @@ class Cat(Entity):
 
     def build_cone_vision(self, dist):
         Vx = Vy = 0
-        self.state = 0
+        self.state = 1 if Cat.last_seen else 0
         hidden = False # Si on croise un mur, sortir de la boucle
         for d in dist:
             # Determine width according to vision distance
             if (self.direction == 0 or self.direction == 270):
                 if(hidden): break
+                #minWidth = -d
+                #maxWidth = d +1
                 minWidth = -d + 1
                 maxWidth = d
             elif (self.direction == 90 or self.direction == 180):
                 if(hidden): break
+                #minWidth = d
+                #maxWidth = -d +1
                 minWidth = d + 1
                 maxWidth = -d
 
@@ -129,6 +143,10 @@ class Cat(Entity):
                         continue
                     self.vision[Vx][Vy] = 'V'
                     if(self.state==0 and self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
+                        if(Cat.last_seen!=None) :
+                            print(Cat.last_seen, end='\n')
+                        Cat.last_seen=(Vx,Vy)
+                        print(Cat.last_seen, end='\n')
                         self.state = 1 # Chase him
 
                 elif ((self.direction == 90 or self.direction == 270) 
@@ -141,6 +159,10 @@ class Cat(Entity):
                     self.vision[Vx][Vy] = 'V'
                     if(self.state==0 and self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
                         self.state = 1 # Chase him
+                        if(Cat.last_seen!=None) :
+                            print(Cat.last_seen, end='\n')
+                        Cat.last_seen=(Vx,Vy)
+                        print(Cat.last_seen, end='\n')
 
     def update_cone_vision(self):
         self.clear_vision_cases()

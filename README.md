@@ -14,6 +14,10 @@ pip install pygame
 
 # A faire
 
+Faire en sorte que tout les chats s'update l'état en même temps (i.e quand 1 passe à last_seen=False, tout le monde aussi)
+
+L'idée : faire un blackboard avec un attribut "last_seen" partagé par tous les chats
+
 Régler cône vision (DONE)
 
 Les chats effacent le trou en marchant dessus

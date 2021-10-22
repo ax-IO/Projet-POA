@@ -75,6 +75,7 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # Set title of screen
 pygame.display.set_caption("Metal Gear Solid VI : Return of the Cat")
+pygame.display.set_icon(IMAGE_CAT)
 
 # Loop until the user clicks the close button.
 done = False
