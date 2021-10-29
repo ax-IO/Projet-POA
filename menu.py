@@ -33,8 +33,8 @@ class Menu():
             self.message_display("Pierre Hennecart", 28, 50, h - 200, WHITE)
             self.message_display("Gauthier Germain", 28,
                                  w - 350, h - 200, WHITE)
-            self.message_display("Thomas ", 28, 50, h - 100, WHITE)
-            self.message_display("Albena ", 28, w - 350, h - 100, WHITE)
+            self.message_display("Thomas Scholl", 28, 50, h - 100, WHITE)
+            self.message_display("Albena Stefanova", 28, w - 350, h - 100, WHITE)
         elif (self.type == 1):  # Game Over Menu
             w = 600
             h = 300
