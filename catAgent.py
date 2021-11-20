@@ -147,7 +147,10 @@ class Cat(Entity):
                         hidden = True
                         continue
                     self.vision[Vx][Vy] = 'V'
-                    if(Cat.state==0 and self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
+                    if(self.grid[Vx][Vy] == 'P'): # If player is spotted while patrolling
+                        if Cat.last_seen == False:
+                            effect = pygame.mixer.Sound('sound/spotted.wav')
+                            effect.play()
                         Cat.last_seen=(Vx,Vy)
                         Cat.state = 1 # Chase him
 
