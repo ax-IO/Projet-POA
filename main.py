@@ -49,6 +49,9 @@ IMAGE_GRASS = pygame.transform.scale(IMAGE_GRASS, (WIDTH, HEIGHT))
 IMAGE_HOLE = pygame.image.load("img/hole.png")
 IMAGE_HOLE = pygame.transform.scale(IMAGE_HOLE, (WIDTH, HEIGHT))
 
+EXC_MARK = pygame.image.load("img/exclamation-mark.png")
+EXC_MARK = pygame.transform.scale(EXC_MARK, (screen_scale*15, screen_scale*30))
+
 world = Levels()
 
 grid = world.levels[world.currentLevel]
@@ -226,7 +229,13 @@ while not (done or victory):
                                           (MARGIN + HEIGHT) * row + MARGIN,
                                           WIDTH,
                                           HEIGHT])
+            if cats[0].last_seen: 
+                screen.blit(EXC_MARK, [(MARGIN + WIDTH) * cats[0].last_seen[1] + WIDTH/3 + MARGIN,
+                                        (MARGIN + HEIGHT) * cats[0].last_seen[0] + MARGIN,
+                                        WIDTH,
+                                        HEIGHT])
 
+            
     # Limit to 60 frames per second
     clock.tick(60)
 
