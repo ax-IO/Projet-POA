@@ -60,6 +60,7 @@ cats = world.cats[world.currentLevel]
 
 grid[player.pos[0]][player.pos[1]] = 'P'
 for c in cats:
+    print(c)
     grid[c.pos[0]][c.pos[1]] = 'C' if (grid[c.pos[0]][c.pos[1]] not in ('H','O')) else 'O'
 
 
@@ -90,6 +91,7 @@ clock = pygame.time.Clock()
 
 # -------- Main Program Loop -----------
 while not (done or victory):
+    print(cats)
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
@@ -142,8 +144,9 @@ while not (done or victory):
                     gameover = True
                 else:
                     turn_count += 1
-                print("turn count =", turn_count)
+                # print("turn count =", turn_count)
                 for c in cats:
+                    print("move3")
                     c.choix_action(turn_count)
                     if(c.pos == player.pos):
                         gameover = True

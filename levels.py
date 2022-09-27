@@ -1,5 +1,6 @@
 from player import Player
 from catAgent import Cat
+from mouseAgent import Mouse
 
 
 class Levels():
@@ -17,7 +18,7 @@ class Levels():
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ]
-        level1Player = Player(level1, (8, 5))
+        level1Player = Mouse(level1, (8, 5))
         level1Cats = [Cat(level1, level1Player, (2, 3)), ]
 
         level2 = [
