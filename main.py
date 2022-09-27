@@ -33,8 +33,35 @@ HEIGHT = screen_scale*50
 # This sets the margin between each cell
 MARGIN = screen_scale*1
 
+world = Levels()
+
+grid = world.levels[world.currentLevel]
+player = world.player[world.currentLevel]
+cats = world.cats[world.currentLevel]
+
+grid[player.pos[0]][player.pos[1]] = 'P'
+for c in cats:
+    grid[c.pos[0]][c.pos[1]] = 'C' if (
+        grid[c.pos[0]][c.pos[1]] not in ('H', 'O')) else 'O'
+
+
+def getCatByPos(x, y):
+    for c in cats:
+        if (c.pos == (x, y)):
+            return c
+
+
+# Initialize pygame
+pygame.init()
+
+
+# Set the HEIGHT and WIDTH of the screen
+WINDOW_SIZE = [screen_scale*510, screen_scale*510]
+screen = pygame.display.set_mode(WINDOW_SIZE)
+
 # IMAGE SPRITE
-IMAGE_CAT = pygame.image.load("img/cat2.png")
+
+IMAGE_CAT = pygame.image.load("img/cat3.png")
 IMAGE_CAT = pygame.transform.scale(IMAGE_CAT, (WIDTH, HEIGHT))
 
 IMAGE_MOUSE = pygame.image.load("img/mouse.png")
@@ -52,30 +79,6 @@ IMAGE_HOLE = pygame.transform.scale(IMAGE_HOLE, (WIDTH, HEIGHT))
 EXC_MARK = pygame.image.load("img/exclamation-mark.png")
 EXC_MARK = pygame.transform.scale(EXC_MARK, (screen_scale*15, screen_scale*30))
 
-world = Levels()
-
-grid = world.levels[world.currentLevel]
-player = world.player[world.currentLevel]
-cats = world.cats[world.currentLevel]
-
-grid[player.pos[0]][player.pos[1]] = 'P'
-for c in cats:
-    grid[c.pos[0]][c.pos[1]] = 'C' if (grid[c.pos[0]][c.pos[1]] not in ('H','O')) else 'O'
-
-
-def getCatByPos(x, y):
-    for c in cats:
-        if(c.pos == (x, y)):
-            return c
-
-
-# Initialize pygame
-pygame.init()
-
-# Set the HEIGHT and WIDTH of the screen
-WINDOW_SIZE = [screen_scale*510, screen_scale*510]
-screen = pygame.display.set_mode(WINDOW_SIZE)
-
 # Set title of screen
 pygame.display.set_caption("Metal Gear Solid VI : Return of the Cat")
 pygame.display.set_icon(IMAGE_CAT)
@@ -88,12 +91,13 @@ gameover = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
+
 # -------- Main Program Loop -----------
 while not (done or victory):
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
-        elif(gameover == True):
+        elif (gameover == True):
             gameoverMenu = Menu(screen, 1)
             gameoverMenu.launch()
 
@@ -108,7 +112,8 @@ while not (done or victory):
 
             grid[player.pos[0]][player.pos[1]] = 'P'
             for c in cats:
-                grid[c.pos[0]][c.pos[1]] = 'C' if (grid[c.pos[0]][c.pos[1]] not in ('H','O')) else 'O'
+                grid[c.pos[0]][c.pos[1]] = 'C' if (
+                    grid[c.pos[0]][c.pos[1]] not in ('H', 'O')) else 'O'
                 c.grid = grid
             screen = pygame.display.set_mode(WINDOW_SIZE)
         elif event.type == pygame.KEYDOWN:
@@ -126,7 +131,7 @@ while not (done or victory):
                 player.moved = False
                 if (grid[player.pos[0]][player.pos[1]] == 'H'):
                     world.currentLevel += 1
-                    if(world.currentLevel == len(world.levels)):  # Victory break
+                    if (world.currentLevel == len(world.levels)):  # Victory break
                         victory = True
                     else:
                         # Open new level
@@ -137,15 +142,16 @@ while not (done or victory):
 
                         grid[player.pos[0]][player.pos[1]] = 'P'
                         for c in cats:
-                            grid[c.pos[0]][c.pos[1]] = 'C' if (grid[c.pos[0]][c.pos[1]] not in ('H','O')) else 'O'
-                elif(grid[player.pos[0]][player.pos[1]] == 'C'):
+                            grid[c.pos[0]][c.pos[1]] = 'C' if (
+                                grid[c.pos[0]][c.pos[1]] not in ('H', 'O')) else 'O'
+                elif (grid[player.pos[0]][player.pos[1]] == 'C'):
                     gameover = True
                 else:
                     turn_count += 1
                 print("turn count =", turn_count)
                 for c in cats:
                     c.choix_action(turn_count)
-                    if(c.pos == player.pos):
+                    if (c.pos == player.pos):
                         gameover = True
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -155,7 +161,7 @@ while not (done or victory):
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
             # Set that location to one
-            if(grid[row][column] == 'C'):
+            if (grid[row][column] == 'C'):
                 cats[0].souffle()
 
     # Set the screen background
@@ -202,13 +208,21 @@ while not (done or victory):
             # Affichage du sprite cat sur la case
             if tile == 'C':
                 cat = getCatByPos(row, column)
+                if (cat.state == 0):  # Patrolling
+                    IMAGE_CAT = pygame.image.load("img/cat3.png")
+                    IMAGE_CAT = pygame.transform.scale(
+                        IMAGE_CAT, (WIDTH, HEIGHT))
+                if (cat.state == 1):  # Chasing the player
+                    IMAGE_CAT = pygame.image.load("img/cat3_angry.png")
+                    IMAGE_CAT = pygame.transform.scale(
+                        IMAGE_CAT, (WIDTH, HEIGHT))
                 IMAGE_CAT_rotate = pygame.transform.rotate(
                     IMAGE_CAT, cat.direction)
                 screen.blit(IMAGE_CAT_rotate, [(MARGIN + WIDTH) * column + MARGIN,
                                                (MARGIN + HEIGHT) * row + MARGIN,
                                                WIDTH,
                                                HEIGHT])
-                                               
+
             # Affichage du sprite cat sur le trou
             if tile == 'O':
                 screen.blit(IMAGE_HOLE, [(MARGIN + WIDTH) * column + MARGIN,
@@ -216,6 +230,16 @@ while not (done or victory):
                                          WIDTH,
                                          HEIGHT])
                 cat = getCatByPos(row, column)
+
+                if (cat.state == 0):  # Patrolling
+                    IMAGE_CAT = pygame.image.load("img/cat3.png")
+                    IMAGE_CAT = pygame.transform.scale(
+                        IMAGE_CAT, (WIDTH, HEIGHT))
+                if (cat.state == 1):  # Chasing the player
+                    IMAGE_CAT = pygame.image.load("img/cat3_angry.png")
+                    IMAGE_CAT = pygame.transform.scale(
+                        IMAGE_CAT, (WIDTH, HEIGHT))
+
                 IMAGE_CAT_rotate = pygame.transform.rotate(
                     IMAGE_CAT, cat.direction)
                 screen.blit(IMAGE_CAT_rotate, [(MARGIN + WIDTH) * column + MARGIN,
@@ -229,20 +253,20 @@ while not (done or victory):
                                           (MARGIN + HEIGHT) * row + MARGIN,
                                           WIDTH,
                                           HEIGHT])
-            if cats[0].last_seen: 
+            if cats[0].last_seen:
                 screen.blit(EXC_MARK, [(MARGIN + WIDTH) * cats[0].last_seen[1] + WIDTH/3 + MARGIN,
-                                        (MARGIN + HEIGHT) * cats[0].last_seen[0] + MARGIN,
-                                        WIDTH,
-                                        HEIGHT])
+                                       (MARGIN + HEIGHT) *
+                                       cats[0].last_seen[0] + MARGIN,
+                                       WIDTH,
+                                       HEIGHT])
 
-            
     # Limit to 60 frames per second
     clock.tick(60)
 
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
-if(victory):
+if (victory):
     victoryMenu = Menu(screen, 0)
     victoryMenu.launch()
-elif(done):
+elif (done):
     pygame.quit()
