@@ -41,13 +41,13 @@ class Cat(Entity):
         if dir == 0 :
             if (pos[0]+1)<len(self.grid[0]) :
                 if self.grid[pos[0]+1][pos[1]] != 'W' :    
-                    if self.grid[pos[0] + 1][pos[1]] == '0' :
+                    if self.grid[pos[0] + 1][pos[1]] != 'V' :
                         cost+=1
                     if (pos[0]+2)<len(self.grid[0]) :
-                        if self.grid[pos[0] + 2][pos[1]] == '0' :
+                        if self.grid[pos[0] + 2][pos[1]] != 'V' :
                             cost+=1
                         if (pos[1]-1)>len(self.grid) :
-                            if self.grid[pos[0] + 2][pos[1]-1] == '0' :
+                            if self.grid[pos[0] + 2][pos[1]-1] != 'V' :
                                 cost+=1
                         if (pos[1]+1)<len(self.grid) :
                             if self.grid[pos[0] + 2][pos[1]+1] != 'V' :
