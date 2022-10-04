@@ -137,44 +137,68 @@ class Cat(Entity):
                                x * (self.height + self.margin) + 0.5 * (self.height + self.margin))
 
         if (self.direction == 0):  # Right
-            if (self.grid[x][y+1] == 'W'):
-                self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
-                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
-                self.devantDroite = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
-                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+            if (y < len(self.grid[0]) - 1):
+                if (self.grid[x][y+1] == 'W'):
+                    self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                         self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+                    self.devantDroite = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                         self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+                else:
+                    self.devantGauche = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
+                                         self.positionCentre[1] - 1.5*self.height - 1*self.margin)
+                    self.devantDroite = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
+                                         self.positionCentre[1] + 1.5*self.height + 1*self.margin)
             else:
                 self.devantGauche = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
                                      self.positionCentre[1] - 1.5*self.height - 1*self.margin)
                 self.devantDroite = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
                                      self.positionCentre[1] + 1.5*self.height + 1*self.margin)
         if (self.direction == 90):  # Up
-            if (self.grid[x-1][y] == 'W'):
-                self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
-                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
-                self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
-                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+            if (x > 0):
+                if (self.grid[x-1][y] == 'W'):
+                    self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                         self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+                    self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                         self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+                else:
+                    self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
+                                         self.positionCentre[1] - 2.5*self.height - 2*self.margin)
+                    self.devantDroite = (self.positionCentre[0] - 1.5*self.width - 1*self.margin,
+                                         self.positionCentre[1] - 2.5*self.height - 2*self.margin)
             else:
                 self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
                                      self.positionCentre[1] - 2.5*self.height - 2*self.margin)
                 self.devantDroite = (self.positionCentre[0] - 1.5*self.width - 1*self.margin,
                                      self.positionCentre[1] - 2.5*self.height - 2*self.margin)
         if (self.direction == 180):  # Left
-            if (self.grid[x][y-1] == 'W'):
-                self.devantGauche = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
-                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
-                self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
-                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+            if (y > 0):
+                if (self.grid[x][y-1] == 'W'):
+                    self.devantGauche = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                         self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+                    self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                         self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+                else:
+                    self.devantGauche = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
+                                         self.positionCentre[1] - 1.5*self.height - 1*self.margin)
+                    self.devantDroite = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
+                                         self.positionCentre[1] + 1.5*self.height + 1*self.margin)
             else:
                 self.devantGauche = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
                                      self.positionCentre[1] - 1.5*self.height - 1*self.margin)
                 self.devantDroite = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
                                      self.positionCentre[1] + 1.5*self.height + 1*self.margin)
         if (self.direction == 270):  # Down
-            if (self.grid[x+1][y] == 'W'):
-                self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
-                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
-                self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
-                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+            if (x < len(self.grid[0]) - 1):
+                if (self.grid[x+1][y] == 'W'):
+                    self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                         self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+                    self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                         self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+                else:
+                    self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
+                                         self.positionCentre[1] + 2.5*self.height + 2*self.margin)
+                    self.devantDroite = (self.positionCentre[0] - 1.5*self.width - 1*self.margin,
+                                         self.positionCentre[1] + 2.5*self.height + 2*self.margin)
             else:
                 self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
                                      self.positionCentre[1] + 2.5*self.height + 2*self.margin)
