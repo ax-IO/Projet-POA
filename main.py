@@ -1,11 +1,11 @@
 """
  Example program to show using an array to back a grid on-screen.
- 
+
  Sample Python/Pygame Programs
  Simpson College Computer Science
  http://programarcadegames.com/
  http://simpson.edu/computer-science/
- 
+
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
 import pygame
@@ -23,6 +23,20 @@ GRAY = (128, 128, 128)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+# https://stackoverflow.com/questions/6339057/draw-a-transparent-rectangles-and-polygons-in-pygame
+# Draw Triangles
+
+
+def draw_polygon_alpha(surface, color, points):
+    lx, ly = zip(*points)
+    min_x, min_y, max_x, max_y = min(lx), min(ly), max(lx), max(ly)
+    target_rect = pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
+    shape_surf = pygame.Surface(target_rect.size, pygame.SRCALPHA)
+    pygame.draw.polygon(shape_surf, color, [
+        (x - min_x, y - min_y) for x, y in points])
+    surface.blit(shape_surf, target_rect)
+
+
 # Echelle de fenêtre
 screen_scale = 2
 
@@ -32,7 +46,6 @@ HEIGHT = screen_scale*50
 
 # This sets the margin between each cell
 MARGIN = screen_scale*1
-
 world = Levels()
 
 grid = world.levels[world.currentLevel]
@@ -57,6 +70,9 @@ pygame.init()
 
 # Set the HEIGHT and WIDTH of the screen
 WINDOW_SIZE = [screen_scale*510, screen_scale*510]
+
+for cat in cats:
+    cat.set_screen(WINDOW_SIZE, HEIGHT, WIDTH, MARGIN)
 screen = pygame.display.set_mode(WINDOW_SIZE)
 
 # IMAGE SPRITE
@@ -110,6 +126,9 @@ while not (done or victory):
             player.grid = grid
             cats = world.cats[world.currentLevel]
 
+            for cat in cats:
+                cat.set_screen(WINDOW_SIZE, HEIGHT, WIDTH, MARGIN)
+
             grid[player.pos[0]][player.pos[1]] = 'P'
             for c in cats:
                 grid[c.pos[0]][c.pos[1]] = 'C' if (
@@ -129,6 +148,8 @@ while not (done or victory):
                 player.move(0, 0)
             if player.moved == True:
                 player.moved = False
+
+                # If level complete
                 if (grid[player.pos[0]][player.pos[1]] == 'H'):
                     world.currentLevel += 1
                     if (world.currentLevel == len(world.levels)):  # Victory break
@@ -138,6 +159,9 @@ while not (done or victory):
                         grid = world.levels[world.currentLevel]
                         player = world.player[world.currentLevel]
                         cats = world.cats[world.currentLevel]
+
+                        for cat in cats:
+                            cat.set_screen(WINDOW_SIZE, HEIGHT, WIDTH, MARGIN)
                         turn_count = 0
 
                         grid[player.pos[0]][player.pos[1]] = 'P'
@@ -260,6 +284,10 @@ while not (done or victory):
                                        WIDTH,
                                        HEIGHT])
 
+    # Draw cat vision cone
+    for cat in cats:
+        draw_polygon_alpha(screen, (255, 255, 0, 127), [
+                           cat.positionCentre, cat.devantGauche, cat.devantDroite])
     # Limit to 60 frames per second
     clock.tick(60)
 
