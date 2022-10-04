@@ -24,18 +24,134 @@ class Cat(Entity):
         effect = pygame.mixer.Sound('sound/chatpascontent.wav')
         effect.play()
 
+
+
+    def cout_move(self,dir,pos):
+        cost = 0
+        if dir == 0 :
+            if (pos[0]+1)<len(self.grid[0]) :
+                if self.grid[pos[0]+1][pos[1]] != 'W' :    
+                    if self.grid[pos[0] + 1][pos[1]] == '0' :
+                        cost+=1
+                    if (pos[0]+2)<len(self.grid[0]) :
+                        if self.grid[pos[0] + 2][pos[1]] == '0' :
+                            cost+=1
+                        if (pos[1]-1)>len(self.grid) :
+                            if self.grid[pos[0] + 2][pos[1]-1] == '0' :
+                                cost+=1
+                        if (pos[1]+1)<len(self.grid) :
+                            if self.grid[pos[0] + 2][pos[1]+1] != 'V' :
+                                cost+=1
+        
+        if dir == 90 :
+            if (pos[1]+1)<len(self.grid) :
+                if self.grid[pos[0]][pos[1]+1] != 'W' :
+                    if self.grid[pos[0]][pos[1]+1] != 'V' :
+                        cost+=1
+                    if (pos[1]+2)<len(self.grid) :
+                        if self.grid[pos[0]][pos[1]+2] != 'V' :
+                            cost+=1
+                        if (pos[0]-1)>len(self.grid[0]) :
+                            if self.grid[pos[0]-1][pos[1]+2] != 'V' :
+                                cost+=1
+                        if (pos[0]+1)<len(self.grid[0]) :
+                            if self.grid[pos[0]+1][pos[1]+2] != 'V' :
+                                cost+=1
+
+        if dir == 180 :
+            if (pos[0]-1)>len(self.grid[0]) :
+                if self.grid[pos[0]-1][pos[1]] != 'W' :
+                    if self.grid[self.pos[0] - 1][pos[1]] != 'V' :
+                        cost+=1
+                    if (pos[0]-2)>len(self.grid[0]) :
+                        if self.grid[pos[0] - 2][pos[1]] != 'V' :
+                            cost+=1
+                        if (pos[1]-1)>len(self.grid) :
+                            if self.grid[pos[0] - 2][pos[1]-1] != 'V' :
+                                cost+=1
+                        if (pos[1]+1)<len(self.grid) :
+                            if self.grid[pos[0] - 2][pos[1]+1] != 'V' :
+                                cost+=1
+
+        if dir == 270 :
+            if (pos[1]-1)>len(self.grid) :
+                if self.grid[pos[0]][pos[1]-1] != 'W' :
+                    if self.grid[pos[0]][pos[1]-1] != 'V' :
+                        cost+=1
+                    if (pos[1]-2)>len(self.grid) :
+                        if self.grid[pos[0]][pos[1]-2] != 'V' :
+                            cost+=1
+                        if (pos[0]-1)>len(self.grid[0]) :
+                            if self.grid[pos[0]-1][pos[1]-2] != 'V' :
+                                cost+=1
+                        if (pos[0]+1)<len(self.grid[0]) :
+                            if self.grid[pos[0]+1][pos[1]-2] != 'V' :
+                                cost+=1
+
+        return cost
+  
+
+
     def patrol(self, turn_count):
         # Rotate to new direction
         if (turn_count % 2 == 0):
-            dir = random.randint(0, 3)*90
-            if(self.pos[1] == len(self.grid)-1): # If cat on right side, go left
-                dir = 180
-            elif(self.pos[1] == 0): # If cat on left side, go right
-                dir = 0
-            if(self.pos[0] == len(self.grid[0])-1): # If cat on bottom side, go up
-                dir = 90
-            if(self.pos[0] == 0): # If cat on top side, go down
-                dir = 270
+            # dir = random.randint(0, 3)*90
+            # if(self.pos[1] == len(self.grid)-1): # If cat on right side, go left
+            #     dir = 180
+            # elif(self.pos[1] == 0): # If cat on left side, go right
+            #     dir = 0
+            # if(self.pos[0] == len(self.grid[0])-1): # If cat on bottom side, go up
+            #     dir = 90
+            # if(self.pos[0] == 0): # If cat on top side, go down
+            #     dir = 270if (self.direction == 0): # Right
+            
+            directions = (0, 90, 180, 270)
+            max = 0
+            dir = self.direction
+            cost_dir = []
+
+            for d in directions :
+                if d != self.direction :
+                    cost_dir.append((d,self.cout_move(d,self.pos)))
+                else :
+                    if d == 0 :
+                        if(self.pos[0]+1)<len(self.grid[0]) :
+                            if max < self.cout_move(d,(self.pos[0]+1,self.pos[1])) :
+                                max = self.cout_move(d,(self.pos[0]+1,self.pos[1]))
+                                dir = d
+                    
+                    if d == 90 :
+                        if(self.pos[1]-1)>len(self.grid) :
+                            if max < self.cout_move(d,(self.pos[0],self.pos[1]-1)) :
+                                max = self.cout_move(d,(self.pos[0],self.pos[1]-1))
+                                dir = d
+
+                    if d == 180 :
+                        if(self.pos[0]-1)>len(self.grid[0]) :
+                            if max < self.cout_move(d,(self.pos[0]-1,self.pos[1])) :
+                                max = self.cout_move(d,(self.pos[0]-1,self.pos[1]))
+                                dir = d
+
+                    if d == 270 :
+                        if(self.pos[1]+1)<len(self.grid) :
+                            if max < self.cout_move(d,(self.pos[0],self.pos[1]+1)) :
+                                max = self.cout_move(d,(self.pos[0],self.pos[1]+1))
+                                dir = d
+            
+            for d,c in cost_dir :
+                if max<c :
+                    max = c
+
+            potential_dir = []
+            for d,c in cost_dir :
+                if max == c :
+                    potential_dir.append(d)
+            if len(potential_dir)>0 :
+                dir = potential_dir[random.randint(0,len(potential_dir)-1)]
+            else :
+                dir = random.randint(0,3)*90
+
+
             self.rotate(dir)
         # Move
         if (turn_count % 2 == 1):
