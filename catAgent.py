@@ -133,31 +133,53 @@ class Cat(Entity):
     def build_cone_vision(self, dist):
         x, y = self.pos[0], self.pos[1]
 
-        # self.draw_polygon_alpha(self.screen, (255, 255, 0, 127), [(
-        #     x + (self.width/2+self.margin), y + (self.height/2+self.margin)), (100 + 0.8660 * 90, 145), (100 - 0.8660 * 90, 145)])
         self.positionCentre = (y * (self.width + self.margin) + 0.5 * (self.width + self.margin),
                                x * (self.height + self.margin) + 0.5 * (self.height + self.margin))
 
         if (self.direction == 0):  # Right
-            self.devantGauche = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
-                                 self.positionCentre[1] - 1.5*self.height - 1*self.margin)
-            self.devantDroite = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
-                                 self.positionCentre[1] + 1.5*self.height + 1*self.margin)
+            if (self.grid[x][y+1] == 'W'):
+                self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+                self.devantDroite = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+            else:
+                self.devantGauche = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
+                                     self.positionCentre[1] - 1.5*self.height - 1*self.margin)
+                self.devantDroite = (self.positionCentre[0] + 2.5*self.width + 2*self.margin,
+                                     self.positionCentre[1] + 1.5*self.height + 1*self.margin)
         if (self.direction == 90):  # Up
-            self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
-                                 self.positionCentre[1] - 2.5*self.height - 2*self.margin)
-            self.devantDroite = (self.positionCentre[0] - 1.5*self.width - 1*self.margin,
-                                 self.positionCentre[1] - 2.5*self.height - 2*self.margin)
+            if (self.grid[x-1][y] == 'W'):
+                self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+                self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+            else:
+                self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
+                                     self.positionCentre[1] - 2.5*self.height - 2*self.margin)
+                self.devantDroite = (self.positionCentre[0] - 1.5*self.width - 1*self.margin,
+                                     self.positionCentre[1] - 2.5*self.height - 2*self.margin)
         if (self.direction == 180):  # Left
-            self.devantGauche = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
-                                 self.positionCentre[1] - 1.5*self.height - 1*self.margin)
-            self.devantDroite = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
-                                 self.positionCentre[1] + 1.5*self.height + 1*self.margin)
+            if (self.grid[x][y-1] == 'W'):
+                self.devantGauche = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                     self.positionCentre[1] - 0.5*self.height - 1*self.margin)
+                self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+            else:
+                self.devantGauche = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
+                                     self.positionCentre[1] - 1.5*self.height - 1*self.margin)
+                self.devantDroite = (self.positionCentre[0] - 2.5*self.width - 2*self.margin,
+                                     self.positionCentre[1] + 1.5*self.height + 1*self.margin)
         if (self.direction == 270):  # Down
-            self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
-                                 self.positionCentre[1] + 2.5*self.height + 2*self.margin)
-            self.devantDroite = (self.positionCentre[0] - 1.5*self.width - 1*self.margin,
-                                 self.positionCentre[1] + 2.5*self.height + 2*self.margin)
+            if (self.grid[x+1][y] == 'W'):
+                self.devantGauche = (self.positionCentre[0] + 0.5*self.width + 1*self.margin,
+                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+                self.devantDroite = (self.positionCentre[0] - 0.5*self.width - 1*self.margin,
+                                     self.positionCentre[1] + 0.5*self.height + 1*self.margin)
+            else:
+                self.devantGauche = (self.positionCentre[0] + 1.5*self.width + 1*self.margin,
+                                     self.positionCentre[1] + 2.5*self.height + 2*self.margin)
+                self.devantDroite = (self.positionCentre[0] - 1.5*self.width - 1*self.margin,
+                                     self.positionCentre[1] + 2.5*self.height + 2*self.margin)
 
         Vx = Vy = 0
         Cat.state = 1 if Cat.last_seen else 0

@@ -84,7 +84,8 @@ IMAGE_MOUSE = pygame.image.load("img/mouse.png")
 IMAGE_MOUSE = pygame.transform.scale(IMAGE_MOUSE, (WIDTH, HEIGHT))
 
 IMAGE_WALL = pygame.image.load("img/wall.png")
-IMAGE_WALL = pygame.transform.scale(IMAGE_WALL, (WIDTH, HEIGHT))
+IMAGE_WALL = pygame.transform.scale(
+    IMAGE_WALL, (WIDTH + MARGIN, HEIGHT + MARGIN))
 
 IMAGE_GRASS = pygame.image.load("img/grass.png")
 IMAGE_GRASS = pygame.transform.scale(IMAGE_GRASS, (WIDTH, HEIGHT))
@@ -172,7 +173,7 @@ while not (done or victory):
                     gameover = True
                 else:
                     turn_count += 1
-                print("turn count =", turn_count)
+                # print("turn count =", turn_count)
                 for c in cats:
                     c.choix_action(turn_count)
                     if (c.pos == player.pos):
@@ -201,26 +202,30 @@ while not (done or victory):
                                       (MARGIN + HEIGHT) * row + MARGIN,
                                       WIDTH,
                                       HEIGHT])
+    # Draw cat vision cone
+    for cat in cats:
+        draw_polygon_alpha(screen, (255, 255, 0, 127), [
+                           cat.positionCentre, cat.devantGauche, cat.devantDroite])
     for row in range(10):
         for column in range(10):
             tile = grid[row][column]
 
             # Draw dangerous areas and grass
-            for c in cats:
-                # Affichage d'une case rouge en cas de vision du chat
-                if c.vision[row][column] == 'V':
-                    pygame.draw.rect(screen,
-                                     RED,
-                                     [(MARGIN + WIDTH) * column + MARGIN,
-                                      (MARGIN + HEIGHT) * row + MARGIN,
-                                         WIDTH,
-                                         HEIGHT])
+            # for c in cats:
+            #     # Affichage d'une case rouge en cas de vision du chat
+            #     if c.vision[row][column] == 'V':
+            #         pygame.draw.rect(screen,
+            #                          RED,
+            #                          [(MARGIN + WIDTH) * column + MARGIN,
+            #                           (MARGIN + HEIGHT) * row + MARGIN,
+            #                              WIDTH,
+            #                              HEIGHT])
 
             # Draw the rest
             # Affichage du sprite wall sur la case
             if tile == 'W':
-                screen.blit(IMAGE_WALL, [(MARGIN + WIDTH) * column + MARGIN,
-                                         (MARGIN + HEIGHT) * row + MARGIN,
+                screen.blit(IMAGE_WALL, [(MARGIN + WIDTH) * column,
+                                         (MARGIN + HEIGHT) * row,
                                          WIDTH,
                                          HEIGHT])
             elif tile == 'H':
@@ -284,10 +289,6 @@ while not (done or victory):
                                        WIDTH,
                                        HEIGHT])
 
-    # Draw cat vision cone
-    for cat in cats:
-        draw_polygon_alpha(screen, (255, 255, 0, 127), [
-                           cat.positionCentre, cat.devantGauche, cat.devantDroite])
     # Limit to 60 frames per second
     clock.tick(60)
 
