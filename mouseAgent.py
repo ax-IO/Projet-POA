@@ -115,7 +115,7 @@ class Mouse(Entity):
         min = self.h(x,y)
         direction = 10
 
-        astar(self.grid, self.pos, self.hole)
+        # astar(self.grid, self.pos, self.hole)
         print("star")
 
         if(self.canMove(x+1, y) and  min > self.h(x+1, y)): direction = 270
