@@ -144,7 +144,7 @@ while not (done or victory):
                     turn_count += 1
                 # print("turn count =", turn_count)
                 for c in cats:
-                    print("move3")
+                    #print("all cats move")
                     c.choix_action(turn_count)
                     if(c.pos == player.pos):
                         gameover = True

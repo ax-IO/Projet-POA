@@ -76,7 +76,7 @@ class Cat(Entity):
             self.chase(turn_count)
 
     def move(self):
-        print("move2")
+        print("cat move")
         #print("last seen by cat" + str(Cat.last_seen) + " etat:" + str(Cat.state))
         if (self.direction == 0): # Right
             x, y = 0, 1
