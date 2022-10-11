@@ -1,11 +1,9 @@
 """
  Example program to show using an array to back a grid on-screen.
-
  Sample Python/Pygame Programs
  Simpson College Computer Science
  http://programarcadegames.com/
  http://simpson.edu/computer-science/
-
  Explanation video: http://youtu.be/mdTeqiWyFnc
 """
 import pygame
@@ -175,7 +173,7 @@ while not (done or victory):
                     turn_count += 1
                 # print("turn count =", turn_count)
                 for c in cats:
-                    print("move3")
+                    #print("all cats move")
                     c.choix_action(turn_count)
                     if (c.pos == player.pos):
                         gameover = True
@@ -212,18 +210,15 @@ while not (done or victory):
             tile = grid[row][column]
 
             # Draw dangerous areas and grass
-            for c in cats:
+            # for c in cats:
             #     # Affichage d'une case rouge en cas de vision du chat
-                if c.vision[row][column] == 'V':
-                    
+            #     if c.vision[row][column] == 'V':
             #         pygame.draw.rect(screen,
             #                          RED,
             #                          [(MARGIN + WIDTH) * column + MARGIN,
             #                           (MARGIN + HEIGHT) * row + MARGIN,
             #                              WIDTH,
             #                              HEIGHT])
-                    if grid[row][column] not in ('P','C','H') :
-                        grid[row][column] = 'V'
 
             # Draw the rest
             # Affichage du sprite wall sur la case
