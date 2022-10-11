@@ -119,48 +119,52 @@ class Cat(Entity):
             max = 0
             dir = self.direction
             cost_dir = []
-
+            # print("avant bouvle")
+            print("x :",len(self.grid), "y :", len(self.grid[0]))   
             for d in directions :
                 if d != self.direction :
+                    # cout = self.cout_move(d,self.pos)
+                    # print('avant fct cout')
                     cost_dir.append((d,self.cout_move(d,self.pos)))
+                    print(cost_dir)
                 else :
+                    # print('avant fct cout')
                     if d == 0 :
                         if(self.pos[0]+1)<len(self.grid[0]) :
-                            if max < self.cout_move(d,(self.pos[0]+1,self.pos[1])) :
-                                max = self.cout_move(d,(self.pos[0]+1,self.pos[1]))
-                                dir = d
+                            # if max < self.cout_move(d,(self.pos[0]+1,self.pos[1])) :
+                            cost_dir.append((d,self.cout_move(d,(self.pos[0]+1,self.pos[1])) + 1))
+                            
                     
-                    if d == 90 :
+                    if d == 270 :
                         if(self.pos[1]-1)>len(self.grid) :
-                            if max < self.cout_move(d,(self.pos[0],self.pos[1]-1)) :
-                                max = self.cout_move(d,(self.pos[0],self.pos[1]-1))
-                                dir = d
+                            # if max < self.cout_move(d,(self.pos[0],self.pos[1]-1)) :
+                            cost_dir.append((d,self.cout_move(d,(self.pos[0],self.pos[1]-1))))
 
                     if d == 180 :
                         if(self.pos[0]-1)>len(self.grid[0]) :
-                            if max < self.cout_move(d,(self.pos[0]-1,self.pos[1])) :
-                                max = self.cout_move(d,(self.pos[0]-1,self.pos[1]))
-                                dir = d
+                            # if max < self.cout_move(d,(self.pos[0]-1,self.pos[1])) :
+                            cost_dir.append((d,self.cout_move(d,(self.pos[0]-1,self.pos[1]))))
 
-                    if d == 270 :
+                    if d == 90 :
                         if(self.pos[1]+1)<len(self.grid) :
-                            if max < self.cout_move(d,(self.pos[0],self.pos[1]+1)) :
-                                max = self.cout_move(d,(self.pos[0],self.pos[1]+1))
-                                dir = d
+                            # if max < self.cout_move(d,(self.pos[0],self.pos[1]+1)) :
+                            cost_dir.append((d,self.cout_move(d,(self.pos[0],self.pos[1]+1))))
             
             for d,c in cost_dir :
                 if max<c :
+                    print("max update", c)
                     max = c
-
             potential_dir = []
-            for d,c in cost_dir :
-                if max == c :
-                    potential_dir.append(d)
+            for i in  range (0,3) : 
+                if max == cost_dir[i][1] : 
+                    potential_dir.append(cost_dir[i][0])
             if len(potential_dir)>0 :
+                print("pot ran", cost_dir, "current dir :", self.direction)
                 dir = potential_dir[random.randint(0,len(potential_dir)-1)]
             else :
+                print("random", cost_dir, "current dir :", self.direction)
                 dir = random.randint(0,3)*90
-
+            # print("max " + str(max) + " dir:" + str(dir))
 
             self.rotate(dir)
         # Move
