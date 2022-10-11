@@ -81,9 +81,10 @@ def astar(maze, start, end):
 class Mouse(Entity):
 
 
-    def __init__(self, grid, pos):
+    def __init__(self, grid, grid_poid, pos):
         super(Mouse, self).__init__(grid, pos)
         self.direction = 0
+        self.grid_poid = grid_poid
         for line in range(0,len(self.grid)):
             for column in range(0,len(self.grid[0])):
                 if self.grid[line][column] == 'H':
@@ -95,10 +96,10 @@ class Mouse(Entity):
 
     def move(self, a, q):
         # Get the best direction to go to the player
-        self.rotate(self.greedy())
+        self.rotate(self.greedy2())
         # Move
         #if (turn_count % 2 == 1):
-        print(self.pos)
+        print("je me deplace")
         self.move2()
         self.moved=True 
 
@@ -108,16 +109,53 @@ class Mouse(Entity):
         return abs(x - self.hole[0]) + abs(y - self.hole[1])
 
 
+    def greedy2(self):
+        x = self.pos[0]
+        y = self.pos[1]
+        max = [-10,-10]
+        if self.canMove(x+1, y) :
+            print("270")
+            if max[1]< self.grid_poid[x+1][y]:
+                max[0] = 270
+                max[1] = self.grid_poid[x+1][y]
+        
+        if self.canMove(x-1, y) :
+            print("90")
+            if max[1]< self.grid_poid[x-1][y]:
+                max[0] = 90
+                max[1] = self.grid_poid[x-1][y]
+        
+        if self.canMove(x, y+1) :
+            print("0")
+            if max[1]< self.grid_poid[x][y+1]:
+                max[0] = 0
+                max[1] = self.grid_poid[x][y+1]
+        
+        if self.canMove(x, y-1) :
+            print("180")
+            if max[1]< self.grid_poid[x][y-1]:
+                max[0] = 180
+                max[1] = self.grid_poid[x][y-1]
+        print("max : ",max[0],max[1])
+
+        #astar(self.grid, self.pos, self.hole)
+        #print("star")
+        if max[1] > 0 :
+            direction = max[0]
+        else :
+            direction = 0 if self.canMove(x,y+1) else 180
+        print("directtion :", direction)
+        return direction
     # greedy algorithm
     def greedy(self):
         x = self.pos[0]
         y = self.pos[1]
+
+        #astar(self.grid, self.pos, self.hole)
+        #print("star")
+
         min = self.h(x,y)
         direction = 10
-
-        # astar(self.grid, self.pos, self.hole)
-        print("star")
-
         if(self.canMove(x+1, y) and  min > self.h(x+1, y)): direction = 270
         elif(self.canMove(x-1, y) and  min > self.h(x-1, y)): direction = 90
         elif(self.canMove(x,y+1) and  min > self.h(x, y+1)): direction = 0
