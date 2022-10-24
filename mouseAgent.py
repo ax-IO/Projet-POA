@@ -1,81 +1,10 @@
+from matplotlib.pyplot import grid
 import pygame
 import random
 
 from pygame.constants import VIDEOEXPOSE
 
 from entity import Entity
-
-def astar(maze, start, end):
-    """Returns a list of tuples as a path from the given start to the given end in the given maze"""
-
-    # Create start and end node
-
-    # Initialize both open and closed list
-    open_list = []
-    closed_list = []
-
-    # Add the start node
-    open_list.append(start)
-
-    # Loop until you find the end
-    while len(open_list) > 0:
-        # Get the current node
-        current_node = open_list[0]
-        current_index = 0
-        for index, item in enumerate(open_list):
-            if item[0]+item[1] < current_node[0]+current_node[1]:
-                current_node = item
-                current_index = index
-
-        # Pop current off open list, add to closed list
-        open_list.pop(current_index)
-        closed_list.append(current_node)
-
-        # Found the goal
-        if current_node == end:
-            path = []
-            current = current_node
-            while current is not None:
-                path.append(current.position)
-                current = current.parent
-            return path[::-1] # Return reversed path
-
-        # Generate children
-        children = []
-        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]: # Adjacent squares
-
-            # Get node position
-            node_position = (current_node[0] + new_position[0], current_node[1] + new_position[1])
-
-            # Make sure within range
-            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
-                continue
-
-            # Make sure walkable terrain
-            if maze[node_position[0]][node_position[1]] != 0:
-                continue
-
-            # Create new node
-
-            # Append
-            children.append(node_position)
-
-        # Loop through children
-        for child in children:
-
-            # Child is on the closed list
-            for closed_child in closed_list:
-                if child == closed_child:
-                    continue
-
-            # Child is already in the open list
-            for open_node in open_list:
-                if child == open_node :
-                    continue
-
-            # Add the child to the open list
-            open_list.append(child)
-
 
 class Mouse(Entity):
 
@@ -84,6 +13,10 @@ class Mouse(Entity):
         super(Mouse, self).__init__(grid, pos)
         self.direction = 0
         self.grid_poid = grid_poid
+        self.tmpgrid_poid = self.grid_poid_cat()
+        print('chemin')
+        print(self.print_chemin(pos[0],pos[1]))
+
         for line in range(0,len(self.grid)):
             for column in range(0,len(self.grid[0])):
                 if self.grid[line][column] == 'H':
@@ -98,7 +31,6 @@ class Mouse(Entity):
         self.rotate(self.greedy2())
         # Move
         #if (turn_count % 2 == 1):
-        print("je me deplace")
         self.move2()
         self.moved=True 
 
@@ -107,44 +39,114 @@ class Mouse(Entity):
         
         return abs(x - self.hole[0]) + abs(y - self.hole[1])
 
+    def grid_poid_cat(self):
+        grid_copy = list(map(list, self.grid_poid))
+        for line in range(0,len(self.grid)):
+            for column in range(0,len(self.grid[0])):
+                if self.grid[line][column] == 'C':
+                    grid_copy[line][column] = -10
+        return grid_copy
+
+    def print_chemin(self, posx, posy):
+        chemin = []
+        x, y = posx, posy
+        maxpos = [x, y]
+
+        while self.grid[x][y] != 'H':
+            max =-10
+            # print(self.tmpgrid_poid)
+            candidatForMax = []
+            arrayMax = []
+
+            maxpos = [x, y]
+
+            if self.canMove(x+1, y):
+                if max <= self.tmpgrid_poid[x+1][y]:
+                    max = self.tmpgrid_poid[x+1][y]   
+                    maxpos = [x + 1, y]   
+                    candidatForMax.append((self.tmpgrid_poid[x+1][y], [x + 1, y]))
+
+            if self.canMove(x-1, y) :
+                if max <= self.tmpgrid_poid[x-1][y]:
+                    max = self.tmpgrid_poid[x-1][y]
+                    maxpos = [x - 1, y]    
+                    candidatForMax.append((self.tmpgrid_poid[x-1][y], [x - 1, y]))
+       
+            if self.canMove(x, y+1) :
+                if max <= self.tmpgrid_poid[x][y+1]:
+                    max = self.tmpgrid_poid[x][y+1]
+                    maxpos = [x, y+1]    
+                    candidatForMax.append((self.tmpgrid_poid[x][y+1],[x, y + 1]))
+
+            if self.canMove(x, y-1) :
+                if max <= self.tmpgrid_poid[x][y-1]:
+                    max = self.tmpgrid_poid[x][y-1]
+                    maxpos = [x, y - 1]
+                    candidatForMax.append((self.tmpgrid_poid[x][y-1],[x, y - 1]))
+            
+            # x, y = maxpos
+            for c in candidatForMax:
+                if c[0] == max:
+                    arrayMax.append(c[1])
+            # print('============1')
+            # print(candidatForMax)
+            # print(arrayMax)
+            # print('============2')
+
+            x, y = random.choice(arrayMax)
+            chemin.append([x, y])   
+        print('=====END=====')
+
+        return chemin
+
 
     def greedy2(self):
         x = self.pos[0]
         y = self.pos[1]
         max = [-10,-10]
+        maxpos = [x, y]
+        self.tmpgrid_poid = self.grid_poid_cat()
         if self.canMove(x+1, y) :
-            print("270")
-            if max[1]< self.grid_poid[x+1][y]:
+            # print("270")
+            if max[1]< self.tmpgrid_poid[x+1][y]:
                 max[0] = 270
-                max[1] = self.grid_poid[x+1][y]
+                max[1] = self.tmpgrid_poid[x+1][y]
+                maxpos = [x + 1, y]   
+
         
         if self.canMove(x-1, y) :
-            print("90")
-            if max[1]< self.grid_poid[x-1][y]:
+            # print("90")
+            if max[1]< self.tmpgrid_poid[x-1][y]:
                 max[0] = 90
-                max[1] = self.grid_poid[x-1][y]
+                max[1] = self.tmpgrid_poid[x-1][y]
+                maxpos = [x - 1, y]   
+
         
         if self.canMove(x, y+1) :
-            print("0")
-            if max[1]< self.grid_poid[x][y+1]:
+            # print("0")
+            if max[1]< self.tmpgrid_poid[x][y+1]:
                 max[0] = 0
-                max[1] = self.grid_poid[x][y+1]
+                max[1] = self.tmpgrid_poid[x][y+1]
+                maxpos = [x , y + 1]   
+
         
         if self.canMove(x, y-1) :
-            print("180")
-            if max[1]< self.grid_poid[x][y-1]:
+            # print("180")
+            if max[1]< self.tmpgrid_poid[x][y-1]:
                 max[0] = 180
-                max[1] = self.grid_poid[x][y-1]
-        print("max : ",max[0],max[1])
+                max[1] = self.tmpgrid_poid[x][y-1]
+                maxpos = [x, y - 1]   
 
         #astar(self.grid, self.pos, self.hole)
         #print("star")
+        print(self.print_chemin(self.pos[0],self.pos[1]))
         if max[1] > 0 :
             direction = max[0]
         else :
             direction = 0 if self.canMove(x,y+1) else 180
-        print("directtion :", direction)
+
         return direction
+
     # greedy algorithm
     def greedy(self):
         x = self.pos[0]
