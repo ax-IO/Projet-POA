@@ -178,6 +178,9 @@ while not (done or victory):
                 # If level complete
                 if (grid[player.pos[0]][player.pos[1]] == 'H'):
                     world.currentLevel += 1
+                    for cat in cats:
+                        cat.setLastSeen(False)
+                        cat.setState(0)
                     if (world.currentLevel == len(world.levels)):  # Victory break
                         victory = True
                     else:
