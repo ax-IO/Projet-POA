@@ -36,7 +36,7 @@ def draw_polygon_alpha(surface, color, points):
 
 
 # Echelle de fenêtre
-screen_scale = 2
+screen_scale = 1
 
 # This sets the WIDTH and HEIGHT of each grid location
 WIDTH = screen_scale*50
@@ -60,6 +60,30 @@ def getCatByPos(x, y):
     for c in cats:
         if (c.pos == (x, y)):
             return c
+
+
+def sliceLoop(a):
+    aSliced = a
+    i = 0
+    while i < len(aSliced):
+        # print("i = " + str(i))
+        # print("aSliced = " + str(aSliced))
+        # print("len(aSliced) = " + str(len(aSliced)))
+        if aSliced[i] in aSliced[:i]:
+            previousIndex = aSliced[:i].index(aSliced[i])
+            # print("aSliced = " + str(aSliced))
+            # print("i = " + str(i))
+            # print("aSliced[i] = " + str(aSliced[i]))
+            # print("aSliced[:i] = " + str(aSliced[:i]))
+            # print("previousIndex = " + str(previousIndex))
+            for j in range(previousIndex, i):
+                aSliced.pop(previousIndex)
+            # print("new aSliced = " + str(aSliced))
+            # print("\n")
+
+            i = 0
+        i += 1
+    return aSliced
 
 
 # Initialize pygame
@@ -106,6 +130,7 @@ gameover = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
+chemin = sliceLoop(player.chemin())
 
 # -------- Main Program Loop -----------
 while not (done or victory):
@@ -146,6 +171,8 @@ while not (done or victory):
             if event.key == pygame.K_SPACE:
                 player.move(0, 0)
             if player.moved == True:
+                chemin = sliceLoop(player.chemin())
+
                 player.moved = False
 
                 # If level complete
@@ -173,7 +200,7 @@ while not (done or victory):
                     turn_count += 1
                 # print("turn count =", turn_count)
                 for c in cats:
-                    #print("move3")
+                    # print("move3")
                     # print("direction " + str(cat.direction))
                     c.choix_action(turn_count)
                     if (c.pos == player.pos):
@@ -206,6 +233,23 @@ while not (done or victory):
     for cat in cats:
         draw_polygon_alpha(screen, (255, 255, 0, 127), [
                            cat.positionCentre, cat.devantGauche, cat.devantDroite])
+
+    # chemin = player.chemin()
+    # print(chemin)
+
+    # Draw Mouse path
+    for coord in chemin:
+        draw_polygon_alpha(screen,
+                           (0, 0, 255, 127),
+                           [((MARGIN + WIDTH) * coord[1] + MARGIN, (MARGIN + HEIGHT) * coord[0] + MARGIN),
+                            ((MARGIN + WIDTH) * coord[1] + MARGIN + WIDTH,
+                             (MARGIN + HEIGHT) * coord[0] + MARGIN),
+                               ((MARGIN + WIDTH) * coord[1] + MARGIN + WIDTH,
+                                (MARGIN + HEIGHT) * coord[0] + MARGIN+HEIGHT),
+                               ((MARGIN + WIDTH) * coord[1] + MARGIN,
+                                (MARGIN + HEIGHT) * coord[0] + MARGIN + HEIGHT)
+                            ])
+
     for row in range(10):
         for column in range(10):
             tile = grid[row][column]
@@ -213,16 +257,16 @@ while not (done or victory):
             # Draw dangerous areas and grass
             # for c in cats:
             #     # Affichage d'une case rouge en cas de vision du chat
-                # if c.vision[row][column] == 'V':
-                    
+            # if c.vision[row][column] == 'V':
+
             #         pygame.draw.rect(screen,
             #                          RED,
             #                          [(MARGIN + WIDTH) * column + MARGIN,
             #                           (MARGIN + HEIGHT) * row + MARGIN,
             #                              WIDTH,
             #                              HEIGHT])
-                    # if grid[row][column] not in ('P','C','H','O') :
-                    #     grid[row][column] = 'V'
+            # if grid[row][column] not in ('P','C','H','O') :
+            #     grid[row][column] = 'V'
 
             # Draw the rest
             # Affichage du sprite wall sur la case
