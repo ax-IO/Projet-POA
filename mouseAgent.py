@@ -8,23 +8,19 @@ from entity import Entity
 
 class Mouse(Entity):
 
-
     def __init__(self, grid, grid_poid, pos):
         super(Mouse, self).__init__(grid, pos)
         self.direction = 0
         self.grid_poid = grid_poid
         self.tmpgrid_poid = self.grid_poid_cat()
         print('chemin')
-        print(self.print_chemin(pos[0],pos[1]))
+        # print(self.print_chemin(pos[0],pos[1]))
 
         for line in range(0,len(self.grid)):
             for column in range(0,len(self.grid[0])):
                 if self.grid[line][column] == 'H':
                     self.hole = (line, column) 
-        
-    # def souffle(self):
-    #     effect = pygame.mixer.Sound('sound/chatpascontent.wav')
-    #     effect.play()
+
 
     def move(self, a, q):
         # Get the best direction to go to the player
@@ -41,19 +37,36 @@ class Mouse(Entity):
 
     def grid_poid_cat(self):
         grid_copy = list(map(list, self.grid_poid))
+        weight = -5
         for line in range(0,len(self.grid)):
             for column in range(0,len(self.grid[0])):
                 if self.grid[line][column] == 'C':
                     grid_copy[line][column] = -10
+
+                    if (self.canMove(line+1, column)):
+                        grid_copy[line+1][column] += weight
+
+                    if (self.canMove(line, column+1)):
+                        grid_copy[line][column+1] += weight
+
+                    if (self.canMove(line-1, column)):
+                        grid_copy[line-1][column] += weight
+                    
+                    if (self.canMove(line, column-1)):
+                        grid_copy[line][column-1] += weight
+
         return grid_copy
 
     def print_chemin(self, posx, posy):
         chemin = []
         x, y = posx, posy
         maxpos = [x, y]
+        iteration = len(self.grid)*len(self.grid)
+        # print(iteration)
 
-        while self.grid[x][y] != 'H':
+        while self.grid[x][y] != 'H' and iteration > 0:
             max =-10
+            iteration -=1
             # print(self.tmpgrid_poid)
             candidatForMax = []
             arrayMax = []
@@ -95,7 +108,9 @@ class Mouse(Entity):
 
             x, y = random.choice(arrayMax)
             chemin.append([x, y])   
-        print('=====END=====')
+        print('=====CHEMIN=====')
+        print("iteration ", iteration)
+        print("Attention beaucoup d'embuche !!") if iteration <= 0 else print("Le chemin est libre ")
 
         return chemin
 
@@ -139,7 +154,8 @@ class Mouse(Entity):
 
         #astar(self.grid, self.pos, self.hole)
         #print("star")
-        print(self.print_chemin(self.pos[0],self.pos[1]))
+        # print(self.print_chemin(self.pos[0],self.pos[1]))
+        self.print_chemin(self.pos[0],self.pos[1])
         if max[1] > 0 :
             direction = max[0]
         else :
@@ -187,7 +203,7 @@ class Mouse(Entity):
             if self.grid[self.pos[0]][self.pos[1]] != 'H' :
                 self.grid[self.pos[0]][self.pos[1]] = 'P'
             self.moved = False
-            print(self.hole[0])
+            # print(self.hole[0])
             
 
 
