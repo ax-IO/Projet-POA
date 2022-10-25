@@ -211,9 +211,9 @@ while not (done or victory):
             tile = grid[row][column]
 
             # Draw dangerous areas and grass
-            for c in cats:
+            # for c in cats:
             #     # Affichage d'une case rouge en cas de vision du chat
-                if c.vision[row][column] == 'V':
+                # if c.vision[row][column] == 'V':
                     
             #         pygame.draw.rect(screen,
             #                          RED,
@@ -221,8 +221,8 @@ while not (done or victory):
             #                           (MARGIN + HEIGHT) * row + MARGIN,
             #                              WIDTH,
             #                              HEIGHT])
-                    if grid[row][column] not in ('P','C','H','O') :
-                        grid[row][column] = 'V'
+                    # if grid[row][column] not in ('P','C','H','O') :
+                    #     grid[row][column] = 'V'
 
             # Draw the rest
             # Affichage du sprite wall sur la case
