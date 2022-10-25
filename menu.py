@@ -30,7 +30,7 @@ class Menu():
                                  30, w/2 - 150, 250, RED)
             self.message_display("Travail réalisé par : ",
                                  20, 20, h - 250, WHITE)
-            self.message_display("Pierre Hennecart", 28, 50, h - 200, WHITE)
+            self.message_display("Ambre Lamouchi", 28, 50, h - 200, WHITE)
             self.message_display("Gauthier Germain", 28,
                                  w - 350, h - 200, WHITE)
             self.message_display("Thomas Scholl", 28, 50, h - 100, WHITE)

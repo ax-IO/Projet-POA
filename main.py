@@ -173,7 +173,8 @@ while not (done or victory):
                     turn_count += 1
                 # print("turn count =", turn_count)
                 for c in cats:
-                    #print("all cats move")
+                    #print("move3")
+                    # print("direction " + str(cat.direction))
                     c.choix_action(turn_count)
                     if (c.pos == player.pos):
                         gameover = True
@@ -208,7 +209,23 @@ while not (done or victory):
     for row in range(10):
         for column in range(10):
             tile = grid[row][column]
-            
+
+            # Draw dangerous areas and grass
+            for c in cats:
+            #     # Affichage d'une case rouge en cas de vision du chat
+                if c.vision[row][column] == 'V':
+                    
+            #         pygame.draw.rect(screen,
+            #                          RED,
+            #                          [(MARGIN + WIDTH) * column + MARGIN,
+            #                           (MARGIN + HEIGHT) * row + MARGIN,
+            #                              WIDTH,
+            #                              HEIGHT])
+                    if grid[row][column] not in ('P','C','H','O') :
+                        grid[row][column] = 'V'
+
+            # Draw the rest
+            # Affichage du sprite wall sur la case
             if tile == 'W':
                 screen.blit(IMAGE_WALL, [(MARGIN + WIDTH) * column,
                                          (MARGIN + HEIGHT) * row,
