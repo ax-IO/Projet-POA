@@ -175,7 +175,8 @@ while not (done or victory):
                     turn_count += 1
                 # print("turn count =", turn_count)
                 for c in cats:
-                    print("move3")
+                    #print("move3")
+                    # print("direction " + str(cat.direction))
                     c.choix_action(turn_count)
                     if (c.pos == player.pos):
                         gameover = True
@@ -222,7 +223,7 @@ while not (done or victory):
             #                           (MARGIN + HEIGHT) * row + MARGIN,
             #                              WIDTH,
             #                              HEIGHT])
-                    if grid[row][column] not in ('P','C','H') :
+                    if grid[row][column] not in ('P','C','H','O') :
                         grid[row][column] = 'V'
 
             # Draw the rest

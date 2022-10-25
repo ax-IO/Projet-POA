@@ -15,7 +15,7 @@ class Cat(Entity):
     def __init__(self, grid, player, pos):
         super(Cat, self).__init__(grid, pos)
         self.player = player
-        self.direction = 0
+        self.direction = 180
         self.portee_vision = 2
         self.vision = [[0] * len(self.grid[0])
                        for i in range((len(self.grid)))]  # Init 2D Array to 0
@@ -37,67 +37,81 @@ class Cat(Entity):
 
 
     def cout_move(self,dir,pos):
+        # print("pos =",pos)
         cost = 0
         if dir == 0 :
-            if (pos[0]+1)<len(self.grid[0]) :
-                if self.grid[pos[0]+1][pos[1]] != 'W' :    
-                    if self.grid[pos[0] + 1][pos[1]] != 'V' :
-                        cost+=1
-                    if (pos[0]+2)<len(self.grid[0]) :
-                        if self.grid[pos[0] + 2][pos[1]] != 'V' :
-                            cost+=1
-                        if (pos[1]-1)>len(self.grid) :
-                            if self.grid[pos[0] + 2][pos[1]-1] != 'V' :
-                                cost+=1
-                        if (pos[1]+1)<len(self.grid) :
-                            if self.grid[pos[0] + 2][pos[1]+1] != 'V' :
-                                cost+=1
-        
-        if dir == 90 :
+            # print("dir 0; pos :",pos,", caise :",self.grid[pos[0]][pos[1]],",con debut :",self.grid[pos[0]][pos[1]+1],",carrefour :",self.grid[pos[0]][pos[1]+2],", T gauche :",self.grid[pos[0]-1][pos[1]+2],", T droit :", self.grid[pos[0]+1][pos[1]+2])
             if (pos[1]+1)<len(self.grid) :
                 if self.grid[pos[0]][pos[1]+1] != 'W' :
-                    if self.grid[pos[0]][pos[1]+1] != 'V' :
+                    if self.grid[pos[0]][pos[1]+1] not in ('V','W', 'C') :
+                        # print("+1")
                         cost+=1
                     if (pos[1]+2)<len(self.grid) :
-                        if self.grid[pos[0]][pos[1]+2] != 'V' :
+                        if self.grid[pos[0]][pos[1]+2] not in ('V','W', 'C') :
+                            # print("+1")
                             cost+=1
-                        if (pos[0]-1)>len(self.grid[0]) :
-                            if self.grid[pos[0]-1][pos[1]+2] != 'V' :
+                        if (pos[0]-1)>=0:
+                            if self.grid[pos[0]-1][pos[1]+2] not in ('V','W', 'C') :
+                                # print("+1")
                                 cost+=1
                         if (pos[0]+1)<len(self.grid[0]) :
-                            if self.grid[pos[0]+1][pos[1]+2] != 'V' :
+                            if self.grid[pos[0]+1][pos[1]+2] not in ('V','W', 'C') :
+                                # print("+1")
+                                cost+=1
+
+        if dir == 90 :
+            # print(pos[0]-1)
+            # print(len(self.grid[0]))
+            # print("dir 90; pos :",pos,", caise :",self.grid[pos[0]][pos[1]],",con debut :",self.grid[pos[0] - 1][pos[1]] ,",pos con debut",pos[0] - 1,pos[1],",carrefour :",self.grid[pos[0] - 2][pos[1]],", T gauche :",self.grid[pos[0] - 2][pos[1]-1],", T droit :", self.grid[pos[0] - 2][pos[1]+1])
+            
+            if pos[0]-1>= 0:
+                if self.grid[pos[0]-1][pos[1]] != 'W' :
+                    if self.grid[pos[0] - 1][pos[1]] not in ('V','W', 'C') :
+                        # print("+1")
+                        cost+=1
+                    if (pos[0]-2)>=0 :
+                        if self.grid[pos[0] - 2][pos[1]] not in ('V','W', 'C') :
+                            # print("+1")
+                            cost+=1
+                        if (pos[1]-1)>=0 :
+                            if self.grid[pos[0] - 2][pos[1]-1] not in ('V','W', 'C') :
+                                # print("+1")
+                                cost+=1
+                        if (pos[1]+1)<len(self.grid) :
+                            if self.grid[pos[0] - 2][pos[1]+1] not in ('V','W', 'C') :
+                                # print("+1")
                                 cost+=1
 
         if dir == 180 :
-            if (pos[0]-1)>len(self.grid[0]) :
-                if self.grid[pos[0]-1][pos[1]] != 'W' :
-                    if self.grid[self.pos[0] - 1][pos[1]] != 'V' :
-                        cost+=1
-                    if (pos[0]-2)>len(self.grid[0]) :
-                        if self.grid[pos[0] - 2][pos[1]] != 'V' :
-                            cost+=1
-                        if (pos[1]-1)>len(self.grid) :
-                            if self.grid[pos[0] - 2][pos[1]-1] != 'V' :
-                                cost+=1
-                        if (pos[1]+1)<len(self.grid) :
-                            if self.grid[pos[0] - 2][pos[1]+1] != 'V' :
-                                cost+=1
-
-        if dir == 270 :
-            if (pos[1]-1)>len(self.grid) :
+            if (pos[1]-1)>=0 :
                 if self.grid[pos[0]][pos[1]-1] != 'W' :
-                    if self.grid[pos[0]][pos[1]-1] != 'V' :
+                    if self.grid[pos[0]][pos[1]-1] not in ('V','W', 'C') :
                         cost+=1
-                    if (pos[1]-2)>len(self.grid) :
-                        if self.grid[pos[0]][pos[1]-2] != 'V' :
+                    if (pos[1]-2)>=0 :
+                        if self.grid[pos[0]][pos[1]-2] not in ('V','W', 'C') :
                             cost+=1
-                        if (pos[0]-1)>len(self.grid[0]) :
-                            if self.grid[pos[0]-1][pos[1]-2] != 'V' :
+                        if (pos[0]-1)>=0 :
+                            if self.grid[pos[0]-1][pos[1]-2] not in ('V','W', 'C') :
                                 cost+=1
                         if (pos[0]+1)<len(self.grid[0]) :
-                            if self.grid[pos[0]+1][pos[1]-2] != 'V' :
+                            if self.grid[pos[0]+1][pos[1]-2] not in ('V','W', 'C') :
                                 cost+=1
-
+        if dir == 270 :
+            if (pos[0]+1)<len(self.grid[0]) :
+                if self.grid[pos[0]+1][pos[1]] != 'W' :    
+                    if self.grid[pos[0] + 1][pos[1]] not in ('V','W', 'C') :
+                        cost+=1
+                    if (pos[0]+2)<len(self.grid[0]) :
+                        if self.grid[pos[0] + 2][pos[1]] not in ('V','W', 'C') :
+                            cost+=1
+                        if (pos[1]-1)>=0 :
+                            if self.grid[pos[0] + 2][pos[1]-1] not in ('V','W', 'C') :
+                                cost+=1
+                        if (pos[1]+1)<len(self.grid) :
+                            if self.grid[pos[0] + 2][pos[1]+1] not in ('V','W', 'C') :
+                                cost+=1
+        # if cost != 0 :
+        # print("cost",cost)    
         return cost
   
 
@@ -120,49 +134,54 @@ class Cat(Entity):
             dir = self.direction
             cost_dir = []
             # print("avant bouvle")
-            print("x :",len(self.grid), "y :", len(self.grid[0]))   
+            # print("x :",len(self.grid), "y :", len(self.grid[0]))   
             for d in directions :
                 if d != self.direction :
                     # cout = self.cout_move(d,self.pos)
                     # print('avant fct cout')
+                    
                     cost_dir.append((d,self.cout_move(d,self.pos)))
-                    print(cost_dir)
+
+                    # print(cost_dir)
                 else :
                     # print('avant fct cout')
                     if d == 0 :
-                        if(self.pos[0]+1)<len(self.grid[0]) :
-                            # if max < self.cout_move(d,(self.pos[0]+1,self.pos[1])) :
-                            cost_dir.append((d,self.cout_move(d,(self.pos[0]+1,self.pos[1])) + 1))
-                            
-                    
-                    if d == 270 :
-                        if(self.pos[1]-1)>len(self.grid) :
-                            # if max < self.cout_move(d,(self.pos[0],self.pos[1]-1)) :
-                            cost_dir.append((d,self.cout_move(d,(self.pos[0],self.pos[1]-1))))
-
-                    if d == 180 :
-                        if(self.pos[0]-1)>len(self.grid[0]) :
-                            # if max < self.cout_move(d,(self.pos[0]-1,self.pos[1])) :
-                            cost_dir.append((d,self.cout_move(d,(self.pos[0]-1,self.pos[1]))))
-
-                    if d == 90 :
                         if(self.pos[1]+1)<len(self.grid) :
                             # if max < self.cout_move(d,(self.pos[0],self.pos[1]+1)) :
-                            cost_dir.append((d,self.cout_move(d,(self.pos[0],self.pos[1]+1))))
-            
+                            if(self.grid[self.pos[0]][self.pos[1]+1]) != 'W' :
+                                cost_dir.append((d,self.cout_move(d,(self.pos[0],self.pos[1]+1))+ 1))
+                    if d == 90 :
+                        if(self.pos[0]-1)>=0 :
+                            # if max < self.cout_move(d,(self.pos[0]-1,self.pos[1])) :
+                            if(self.grid[self.pos[0]-1][self.pos[1]]) != 'W' :
+                                cost_dir.append((d,self.cout_move(d,(self.pos[0]-1,self.pos[1]))+ 1))
+                    if d == 180 :
+                        if(self.pos[1]-1)>=0 :
+                            # if max < self.cout_move(d,(self.pos[0],self.pos[1]-1)) :
+                            if(self.grid[self.pos[0]][self.pos[1]-1]) != 'W' :
+                                cost_dir.append((d,self.cout_move(d,(self.pos[0],self.pos[1]-1))+ 1))
+                    if d == 270 :
+                        if(self.pos[0]+1)<len(self.grid[0]) :
+                            # if max < self.cout_move(d,(self.pos[0]+1,self.pos[1])) :
+                            if(self.grid[self.pos[0]+1][self.pos[1]]) != 'W' :
+                                cost_dir.append((d,self.cout_move(d,(self.pos[0]+1,self.pos[1])) + 1))
+                    
+            # print("cout par direction :", cost_dir)
             for d,c in cost_dir :
                 if max<c :
-                    print("max update", c)
+                    # print("max update", c)
                     max = c
+            # print(cost_dir)
+            # print(self.grid)
             potential_dir = []
             for i in  range (0,3) : 
                 if max == cost_dir[i][1] : 
                     potential_dir.append(cost_dir[i][0])
             if len(potential_dir)>0 :
-                print("pot ran", cost_dir, "current dir :", self.direction)
+                # print("pot ran", cost_dir, "current dir :", self.direction)
                 dir = potential_dir[random.randint(0,len(potential_dir)-1)]
             else :
-                print("random", cost_dir, "current dir :", self.direction)
+                # print("random", cost_dir, "current dir :", self.direction)
                 dir = random.randint(0,3)*90
             # print("max " + str(max) + " dir:" + str(dir))
 
@@ -389,3 +408,5 @@ class Cat(Entity):
 
         elif (self.direction == 270):
             self.build_cone_vision(range(1, self.portee_vision+1))
+
+        
