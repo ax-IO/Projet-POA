@@ -208,20 +208,7 @@ while not (done or victory):
     for row in range(10):
         for column in range(10):
             tile = grid[row][column]
-
-            # Draw dangerous areas and grass
-            # for c in cats:
-            #     # Affichage d'une case rouge en cas de vision du chat
-            #     if c.vision[row][column] == 'V':
-            #         pygame.draw.rect(screen,
-            #                          RED,
-            #                          [(MARGIN + WIDTH) * column + MARGIN,
-            #                           (MARGIN + HEIGHT) * row + MARGIN,
-            #                              WIDTH,
-            #                              HEIGHT])
-
-            # Draw the rest
-            # Affichage du sprite wall sur la case
+            
             if tile == 'W':
                 screen.blit(IMAGE_WALL, [(MARGIN + WIDTH) * column,
                                          (MARGIN + HEIGHT) * row,
