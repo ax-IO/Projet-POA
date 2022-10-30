@@ -14,8 +14,6 @@ class Mouse(Entity):
         self.direction = 0
         self.grid_poid = grid_poid
         self.tmpgrid_poid = self.grid_poid_cat()
-        # print('chemin')
-        # print(self.print_chemin(pos[0],pos[1]))
 
         for line in range(0, len(self.grid)):
             for column in range(0, len(self.grid[0])):
@@ -32,29 +30,42 @@ class Mouse(Entity):
 
     # bird's eye distance heuristic
     def h(self, x, y):
-
         return abs(x - self.hole[0]) + abs(y - self.hole[1])
+
+    def  getCatByPos(self, x, y):
+        for c in self.cats:
+            if (c.pos == (x, y)):
+                return c
+    
+    def add_cats(self, cats):
+        self.cats = cats
 
     def grid_poid_cat(self):
         grid_copy = list(map(list, self.grid_poid))
         weight = -5
+        cone_weight = -0
         for line in range(0, len(self.grid)):
             for column in range(0, len(self.grid[0])):
                 if self.grid[line][column] == 'C':
+                    c_bis = self.getCatByPos( line, column)
                     grid_copy[line][column] = -10
 
                     if (self.canMove(line+1, column)):
+                        grid_copy[line+1][column] += cone_weight if c_bis.direction == 270 else 0
                         grid_copy[line+1][column] += weight
 
                     if (self.canMove(line, column+1)):
+                        grid_copy[line][column+1] += cone_weight if c_bis.direction == 0 else 0
                         grid_copy[line][column+1] += weight
 
                     if (self.canMove(line-1, column)):
+                        grid_copy[line-1][column] += cone_weight if c_bis.direction == 90 else 0
                         grid_copy[line-1][column] += weight
 
                     if (self.canMove(line, column-1)):
+                        grid_copy[line][column-1] += cone_weight if c_bis.direction == 180 else 0
                         grid_copy[line][column-1] += weight
-
+        self.tmpgrid_poid = grid_copy
         return grid_copy
 
     def print_chemin(self, posx, posy):
@@ -101,35 +112,26 @@ class Mouse(Entity):
                     candidatForMax.append(
                         (self.tmpgrid_poid[x][y-1], [x, y - 1]))
 
-            # x, y = maxpos
             for c in candidatForMax:
                 if c[0] == max:
                     arrayMax.append(c[1])
-            # print('============1')
-            # print(candidatForMax)
-            # print(arrayMax)
-            # print('============2')
 
             x, y = random.choice(arrayMax)
             chemin.append([x, y])
-        # print('=====CHEMIN=====')
-        # print("iteration ", iteration)
-        # print("Attention beaucoup d'embuche !!") if iteration <= 0 else print(
-        #     "Le chemin est libre ")
 
         return chemin
 
     def chemin(self):
         chemin = []
+        self.grid_poid_cat()
+
         x, y = self.pos[0], self.pos[1]
         maxpos = [x, y]
         iteration = len(self.grid)*len(self.grid)
-        # print(iteration)
 
         while self.grid[x][y] != 'H' and iteration > 0:
             max = -10
             iteration -= 1
-            # print(self.tmpgrid_poid)
             candidatForMax = []
             arrayMax = []
 
@@ -163,14 +165,9 @@ class Mouse(Entity):
                     candidatForMax.append(
                         (self.tmpgrid_poid[x][y-1], [x, y - 1]))
 
-            # x, y = maxpos
             for c in candidatForMax:
                 if c[0] == max:
                     arrayMax.append(c[1])
-            # print('============1')
-            # print(candidatForMax)
-            # print(arrayMax)
-            # print('============2')
 
             x, y = random.choice(arrayMax)
             chemin.append([x, y])
@@ -182,6 +179,9 @@ class Mouse(Entity):
         max = [-10, -10]
         maxpos = [x, y]
         self.tmpgrid_poid = self.grid_poid_cat()
+        self.print_chemin(self.pos[0], self.pos[1])
+
+
         if self.canMove(x+1, y):
             # print("270")
             if max[1] < self.tmpgrid_poid[x+1][y]:
@@ -213,7 +213,7 @@ class Mouse(Entity):
         #astar(self.grid, self.pos, self.hole)
         # print("star")
         # print(self.print_chemin(self.pos[0],self.pos[1]))
-        self.print_chemin(self.pos[0], self.pos[1])
+
         if max[1] > 0:
             direction = max[0]
         else:

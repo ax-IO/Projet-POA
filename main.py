@@ -171,7 +171,7 @@ while not (done or victory):
             if event.key == pygame.K_SPACE:
                 player.move(0, 0)
             if player.moved == True:
-                chemin = sliceLoop(player.chemin())
+                # chemin = sliceLoop(player.chemin())
 
                 player.moved = False
 
@@ -208,6 +208,7 @@ while not (done or victory):
                     c.choix_action(turn_count)
                     if (c.pos == player.pos):
                         gameover = True
+                chemin = sliceLoop(player.chemin())
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # User clicks the mouse. Get the position
